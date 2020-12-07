@@ -1,0 +1,6 @@
+context_path: coursing_ml.run.ProjectContext
+project_name: "coursing-ml"
+project_version: "0.16.6"
+package_name: "coursing_ml"
+hooks:
+  - coursing_ml.hooks.project_hooks
