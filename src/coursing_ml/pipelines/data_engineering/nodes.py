@@ -32,9 +32,74 @@ PLEASE DELETE THIS FILE ONCE YOU START WORKING ON YOUR OWN PROJECT!
 """
 
 from typing import Any, Dict
-
+from sklearn import preprocessing
 import pandas as pd
 
+def extract_time_range(x):
+    x = x.rstrip()
+    if len(str(x).split(' ')) > 1:
+        time_range = str(x).split(' ')[-1]
+        return time_range
+    else:
+        return 'Weeks'
+
+def extract_number_months(x):
+        n_months = str(x).split(' ')[0]
+        if n_months == 'Approx.,':
+            return str(x).split(' ')[1].strip(',')
+        else:
+            return n_months
+
+def extract_duration_hours(x):
+    if len(str(x).split(' ')) > 1:
+        range_hours = str(x).split(' ')[1]
+        if '-' in range_hours:
+            range_hours = range_hours.split('-')[1]
+        return range_hours
+    else:
+        return 0
+
+def calculate_total_hours(df: pd.DataFrame) -> pd.DataFrame:
+    values = df["number_weeks_months"] * df["hours_per_week"]
+    df['duration_total_hours'] = values.where(df.time_range == 'weeks')
+    values = values * 4
+    df['duration_total_hours'] = values.where(df.time_range == 'months', other=df['duration_total_hours'])
+    return df
+
+
+def label_difficulty(df: pd.DataFrame) -> pd.DataFrame:
+    df['difficulty'] = df['difficulty'].apply(lambda _: str(_))
+    le = preprocessing.LabelEncoder()
+    df['difficulty'] = le.fit_transform(df['difficulty'])
+    return df
+
+
+def map_boolean_to_int(df, field) -> pd.DataFrame:
+    d = {'True': 1, 'False': 0}
+    df[field] = df[field].map(d)
+    return df
+
+
+def preprocess_udacity(df: pd.DataFrame) -> pd.DataFrame:
+    df['n_reviews'] = df['n_reviews'].str.strip(' Reviews')
+    df['n_reviews'] = pd.to_numeric(df['n_reviews'])
+    df['new'] = df['new'].str.strip('[]')
+    df['free'] = df['free'].str.strip('[]')
+    df['rating'] = df['rating'].str.strip(' width:%;')
+    df['rating'] = pd.to_numeric(df['rating'])
+    df = label_difficulty(df)
+    df['duration_hours'] = df['duration_hours'].apply(extract_duration_hours)
+    df['n_reviews'].fillna(0, inplace=True)
+    df['time_range'] = df['duration_weeks'].apply(extract_time_range)
+    df['time_range'] = df['time_range'].str.lower()
+    df['duration_weeks'] = df['duration_weeks'].apply(extract_number_months)
+    df = map_boolean_to_int(df, 'new')
+    df = map_boolean_to_int(df, 'free')
+    df = df.rename(columns={"duration_hours": "hours_per_week", "duration_weeks": "number_weeks_months"})
+    df['number_weeks_months'] = pd.to_numeric(df['number_weeks_months'])
+    df['hours_per_week'] = pd.to_numeric(df['hours_per_week'])
+    df = calculate_total_hours(df)
+    return df
 
 def split_data(data: pd.DataFrame, example_test_data_ratio: float) -> Dict[str, Any]:
     """Node for splitting the classical Iris data set into training and test

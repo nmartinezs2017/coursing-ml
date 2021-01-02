@@ -47,4 +47,10 @@ example_iris_data:
   type: pandas.CSVDataSet
   filepath: data/01_raw/iris.csv
 
+scrapping_data:
+  type: pandas.CSVDataSet
+  filepath: data/01_raw/scrapping_out.csv
 
+preprocessed_udacity:
+  type: pandas.CSVDataSet
+  filepath: data/03_primary/preprocessed_udacity.csv
