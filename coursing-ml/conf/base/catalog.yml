@@ -49,7 +49,11 @@ example_iris_data:
 
 scrapping_data:
   type: pandas.CSVDataSet
-  filepath: data/01_raw/scrapping_out.csv
+  filepath: data/01_raw/udacity.csv
+  fs_args:
+    open_args_load:
+      mode: "rb"
+      encoding: "utf-8"
 
 preprocessed_udacity:
   type: pandas.CSVDataSet
