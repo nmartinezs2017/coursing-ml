@@ -5,20 +5,16 @@ from scrapy import Selector
 from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver import Firefox
 from scrapy.loader import *
-from courses_crawler.items import UdacityItem
-# from scraper_api import ScraperAPIClient
+from ..items import UdacityItem
 
-# scrapy crawl udacity -o "salida.csv"
-# scrapy crawl uda -o salida.csv
+# scrapy crawl udacity -o "udacity.csv"
 
 class UdacitySpider(scrapy.Spider):
-    # client = ScraperAPIClient('b168278f17fd1cdc7040bcbdeed7c80a')
     name = "udacity"
     start_urls = ['https://www.udacity.com/courses/all']
 
     def parse(self, response):
         self.driver = Firefox(executable_path='geckodriver.exe')
-        self.driver = webdriver.Chrome(options=set_chrome_options())
         self.driver.get(response.url)
         self.driver.maximize_window()
         sleep(5)
@@ -63,9 +59,6 @@ class UdacitySpider(scrapy.Spider):
     def parse_card(self, response, difficulty, school, skills, collaboration, n_reviews, active_stars):
         l = ItemLoader(item=UdacityItem(), response=response)
 
-        # self.driver = Firefox(executable_path='geckodriver.exe')
-        # self.driver.get(response.url)
-        # sel = Selector(text=self.driver.page_source)
         self.logger.info(response.url)
 
         description = response.xpath('//*[@class="small hidden-md-down"]/text()').extract_first()
@@ -75,18 +68,9 @@ class UdacitySpider(scrapy.Spider):
         duration_weeks_old = response.xpath('//*[@class="details__stats"]/div/div[2]/h5/text()').extract()
         duration_weeks_old2 = response.xpath('//*[@class="details__overview__item ng-star-inserted"]/text()').extract()
         duration_hours = response.xpath('//*[@class="column-list "]/li/div/p/text()').extract_first()
-        # title = response.xpath('//*[@class="nd-syllabus-term__header__content"]/h2/text()').extract_first()
         title = response.xpath('//h1/text()').extract_first()
-        # rating = sel.xpath('//*[@class="stats__average__rating"]/text()').extract_first()
-        # n_valorations = sel.xpath('//*[@class="x-small gray mb-0"]/text()').extract()
         url:str = response.url
         id_course = url.split('--')[1]
-        if id_course == 'ud803':
-            self.logger.info("ud803")
-            self.logger.info(duration_weeks)
-            self.logger.info(duration_weeks_old)
-            self.logger.info(duration_weeks_old2)
-            self.logger.info(description_old)
 
         l.add_value('id_course', id_course)
         l.add_value('title', title)
