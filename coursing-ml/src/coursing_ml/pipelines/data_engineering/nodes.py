@@ -109,5 +109,3 @@ def feature_selection(df: pd.DataFrame) -> pd.DataFrame:
     mask = df["rating"].isnull()
     df.loc[mask, "rating"] = 0
     return df
-
-    return df

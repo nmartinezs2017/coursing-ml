@@ -70,3 +70,15 @@ fe_udacity:
 features_udacity:
   type: pandas.CSVDataSet
   filepath: data/04_feature/features_udacity.csv
+
+clustering_model:
+  type: pickle.PickleDataSet
+  filepath: data/06_models/clustering_model.pkl
+
+clustering_output_udacity:
+  type: pandas.CSVDataSet
+  filepath: data/07_model_output/clustering_output_udacity.csv
+
+corpus_embeddings:
+  type: pickle.PickleDataSet
+  filepath: data/07_model_output/corpus_embeddings.pkl
