@@ -34,7 +34,7 @@ Delete this when you start working on your own Kedro project.
 
 from kedro.pipeline import Pipeline, node
 
-from .nodes import preprocess_udacity
+from .nodes import preprocess_udacity, feature_cleaning, feature_engineering, feature_selection
 
 
 def create_pipeline(**kwargs):
@@ -45,6 +45,24 @@ def create_pipeline(**kwargs):
                 inputs="scrapping_data",
                 outputs="preprocessed_udacity",
                 name="preprocessing_udacity",
+            ),
+            node(
+                func=feature_cleaning,
+                inputs="preprocessed_udacity",
+                outputs="cleaned_udacity",
+                name="feature_cleaning",
+            ),
+            node(
+                func=feature_engineering,
+                inputs="cleaned_udacity",
+                outputs="fe_udacity",
+                name="feature_engineering",
+            ),
+            node(
+                func=feature_selection,
+                inputs="fe_udacity",
+                outputs="features_udacity",
+                name="feature_selection",
             ),
         ]
     )

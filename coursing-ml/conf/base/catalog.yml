@@ -58,3 +58,15 @@ scrapping_data:
 preprocessed_udacity:
   type: pandas.CSVDataSet
   filepath: data/03_primary/preprocessed_udacity.csv
+
+cleaned_udacity:
+  type: pandas.CSVDataSet
+  filepath: data/03_primary/cleaned_udacity.csv
+
+fe_udacity:
+  type: pandas.CSVDataSet
+  filepath: data/03_primary/fe_udacity.csv
+
+features_udacity:
+  type: pandas.CSVDataSet
+  filepath: data/04_feature/features_udacity.csv
