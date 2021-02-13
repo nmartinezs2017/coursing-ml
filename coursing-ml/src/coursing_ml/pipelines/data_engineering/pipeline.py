@@ -47,6 +47,12 @@ def create_pipeline(**kwargs):
                 name="preprocessing_udacity",
             ),
             node(
+                lambda x: x,
+                inputs="preprocessed_udacity",
+                outputs="data_exp_report",
+                name="data_exploration_report",
+            ),
+            node(
                 func=feature_cleaning,
                 inputs="preprocessed_udacity",
                 outputs="cleaned_udacity",

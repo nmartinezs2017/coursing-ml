@@ -10,6 +10,7 @@ context = load_context('./')
 model = SentenceTransformer('allenai-specter')
 df = context.catalog.load("preprocessed_udacity")
 corpus_embeddings = context.catalog.load("corpus_embeddings")
+df_cl = context.catalog.load("clustering_output_udacity")
 
 def search_courses(title, description = ""):
     query_embedding = model.encode(title+' '+description, convert_to_tensor=True)
@@ -32,7 +33,21 @@ def search_courses(title, description = ""):
 def read_root():
     return {"Hello": "World"}
 
-@app.get("/semantic_search/{title}")
-def read_item(title: str, description: Optional[str] = ""):
+@app.get("/semantic_search/")
+def semantic_search(title: str, description: Optional[str] = ""):
     list_courses = search_courses(title, description)
     return list_courses
+
+@app.get("/clustering/course-cluster/{id_course}")
+def get_course_cluster(id_course: int):
+    return {'id_course': id_course, 'clustering_id': df_cl.iloc[id_course]['Label']}
+
+@app.get("/clustering/courses-list/{id_cluster}")
+def get_list_cluster(id_cluster: int):
+    list_courses = df_cl[df_cl['Label']==id_cluster].index.tolist()
+    return {'clustering_id': id_cluster, 'list_courses': list_courses}
+
+@app.get("/clustering/clusters-list/")
+def get_list_cluster():
+    list_courses = df_cl['Label'].unique().tolist()
+    return {'list_courses': list_courses}

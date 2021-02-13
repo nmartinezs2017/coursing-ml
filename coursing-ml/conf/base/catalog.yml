@@ -82,3 +82,7 @@ clustering_output_udacity:
 corpus_embeddings:
   type: pickle.PickleDataSet
   filepath: data/07_model_output/corpus_embeddings.pkl
+
+data_exp_report:
+  type: coursing_ml.io.ProfileReportDataSet
+  filepath: data/08_reporting/report.html
