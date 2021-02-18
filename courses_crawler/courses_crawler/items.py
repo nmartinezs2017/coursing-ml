@@ -43,3 +43,21 @@ class CourseraItem(scrapy.Item):
     category = scrapy.Field()
     section = scrapy.Field()
     characteristics = scrapy.Field()
+
+
+class UdemyItem(scrapy.Item):
+    id_course = scrapy.Field()
+    title = scrapy.Field()
+    rating = scrapy.Field()
+    n_students = scrapy.Field()
+    url = scrapy.Field()
+    duration = scrapy.Field()
+    description = scrapy.Field()
+    instructor = scrapy.Field()
+    language = scrapy.Field()
+    category = scrapy.Field()
+    subcategory = scrapy.Field()
+    sessions = scrapy.Field()
+    characteristics = scrapy.Field()
+    cost = scrapy.Field()
+    free = scrapy.Field()

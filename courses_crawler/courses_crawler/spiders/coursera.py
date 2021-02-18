@@ -5,7 +5,7 @@ from scrapy import Selector
 from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver import Firefox, FirefoxProfile
 from scrapy.loader import *
-from courses_crawler.items import CourseraItem
+from ..items import CourseraItem
 
 # scrapy crawl coursera -o "coursera.csv"
 

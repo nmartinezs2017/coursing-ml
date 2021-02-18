@@ -18,9 +18,19 @@ class UdacitySpider(scrapy.Spider):
         self.driver.get(response.url)
         self.driver.maximize_window()
         sleep(5)
-        self.driver.find_element_by_xpath('//*[@class="modal-close light"]').click()
+        try:
+            self.driver.find_element_by_xpath('//*[@class="modal-close light"]').click()
+        except NoSuchElementException:
+            ...
+        try:
+            self.driver.find_element_by_xpath('//*[@class="modal-close light"]').click()
+        except NoSuchElementException:
+            ...
         sleep(5)
-        self.driver.find_element_by_xpath('//*[@class="button button--white acceptButton__6yUXUq"]').click()
+        try:
+            self.driver.find_element_by_xpath('//*[@class="button button--white acceptButton__6yUXUq"]').click()
+        except NoSuchElementException:
+            self.driver.find_element_by_xpath('//*[@class="button button--white cookie-consent_acceptButton__33VaL"]').click()
 
         sel = Selector(text=self.driver.page_source)
         cards = sel.xpath('//*[@class="catalog-cards__list__item"]')
