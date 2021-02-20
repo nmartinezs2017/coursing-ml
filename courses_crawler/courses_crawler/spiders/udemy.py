@@ -1,11 +1,13 @@
 
 import scrapy
-from scrapy import Selector
+from scrapy import Selector, http
 from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver import Firefox
 from scrapy.loader import *
 from ..items import UdemyItem
-
+import logging
+import requests
+from time import sleep
 # scrapy crawl udemy -o "udemy.csv"
 
 
@@ -49,11 +51,44 @@ AUTH = ('mSqqJGFCxs2UYF0RGMwtT1ilAvzETsxiIKufRlGq',
 class UdemySpider(scrapy.Spider):
     name = "udemy"
     start_urls = ['https://www.udemy.com/']
+    absolute_page = "https://www.udemy.com"
 
     def parse(self, response):
+        for subcategory in SUBCATEGORIES:
+                param = {'ordering': 'highest-rated', 'subcategory': subcategory, 'ordering': 'highest-rated'}
+                response_courses = requests.get(ENDPOINT, auth=AUTH, params=param)
+                json_response = response_courses.json()
+                while json_response['next'] != None:
+                    response_courses = requests.get(json_response['next'], auth=AUTH)
+                    while response_courses.status_code == 504:
+                        sleep(10)
+                        response_courses = requests.get(json_response['next'], auth=AUTH)
+                    try:
+                        json_response = response_courses.json()
+                    except Exception:
+                        break
+                    try:
+                        courses = json_response['results']
+                        if len(courses) == 0:
+                            logging.info("Empty results.")
+                    except Exception:
+                        logging.exception("Exception raised.")
+                    for course in courses:
+                        link = course['url']
+                        absolute_next_page_url = self.absolute_page + link
+                        yield http.Request(absolute_next_page_url, self.parse_course,
+                                              cb_kwargs=dict(title=course['title'], cost=course['price'], subcategory=subcategory,
+                                                             is_free=not course['is_paid'], id_course=course['id'],
+                                                             instructor=course['visible_instructors'][0]['title'],
+                                                             instructor_url=course['visible_instructors'][0]['url'],
+                                                             description=course['headline']))
+                print(
+                    "\n{} free courses were found in the subcategory {}\n".format(json_response['count'], subcategory))
+            #except Exception:
+            #    logging.critical("Error grave de conexión")
+             #   sleep(50)
 
-
-    def parse_course(self, response):
+    def parse_course(self, response, title, cost, subcategory, is_free, description, id_course, instructor, instructor_url):
         self.driver = Firefox(executable_path='geckodriver.exe')
         self.driver.get(response.url)
         self.driver.maximize_window()
@@ -61,25 +96,27 @@ class UdemySpider(scrapy.Spider):
 
         rating = sel.xpath('.//*[@data-purpose="rating-number"]/text()').extract_first()
         n_students = sel.xpath('.//*[@data-purpose="enrollment"]/text()').extract_first()
-        duration = sel.xpath('.//*[@data-purpose="video-content-length"]/text()').extract_first()
-        sessions = sel.xpath('.//*[@data-purpose="curriculum-stats"]/span/text()').extract_first()
+        duration = sel.xpath('.//*[@data-purpose="curriculum-stats"]/span/span/span/text()').extract()
+        sessions = sel.xpath('.//*[@data-purpose="curriculum-stats"]/span/text()').extract()
+        category = sel.xpath('.//*[@class="udlite-heading-sm"]/text()').extract_first()
+        language = sel.xpath('.//*[@data-purpose="lead-course-locale"]/text()').extract()
         description_extend = sel.xpath('.//*[@data-purpose="safely-set-inner-html:description:description"]/descendant-or-self::*/text()').extract()
-
         l = ItemLoader(item=UdemyItem(), response=response)
 
         l.add_value('id_course', id_course)
         l.add_value('title', title)
         l.add_value('rating', rating)
         l.add_value('n_students', n_students)
-        l.add_value('url', url)
+        l.add_value('url', response.url)
         l.add_value('duration', duration)
         l.add_value('description', description)
         l.add_value('description_extend', description_extend)
         l.add_value('instructor', instructor)
         l.add_value('language', language)
         l.add_value('category', category)
+        l.add_value('subcategory', subcategory)
         l.add_value('sessions', sessions)
         l.add_value('cost', cost)
-        l.add_value('free', free)
+        l.add_value('free', is_free)
 
         return l.load_item()

@@ -53,6 +53,7 @@ class UdemyItem(scrapy.Item):
     url = scrapy.Field()
     duration = scrapy.Field()
     description = scrapy.Field()
+    description_extend = scrapy.Field()
     instructor = scrapy.Field()
     language = scrapy.Field()
     category = scrapy.Field()

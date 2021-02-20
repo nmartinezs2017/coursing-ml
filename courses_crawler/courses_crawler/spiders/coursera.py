@@ -25,9 +25,12 @@ class CourseraSpider(scrapy.Spider):
 
     def parse_directory(self, response):
         pages = response.xpath('//*[@class="c-directory-link"]/@href').extract()
+        next_directory = response.xpath('//*[@class="label-text box arrow"]/@href').extract_first()
 
         for page in pages:
             yield response.follow(page, self.parse_page)
+            if next_directory is not None:
+                yield response.follow(next_directory, self.parse_directory)
             sleep(4)
 
     def parse_page(self, response):
