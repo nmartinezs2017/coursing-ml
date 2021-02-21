@@ -36,6 +36,7 @@ COPY . .
 
 RUN python -m pip install --upgrade pip --trusted-host pypi.org --trusted-host files.pythonhosted.org && \
     python -m pip install --upgrade setuptools && \
+    python -m pip install requests && \
     python -m pip install --no-cache-dir -r requirements.txt
 
 # Clean up

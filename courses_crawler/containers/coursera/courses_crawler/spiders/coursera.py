@@ -36,13 +36,16 @@ class CourseraSpider(scrapy.Spider):
             absolute_next_page_url = absolute_page + section
             yield response.follow(absolute_next_page_url, self.parse_directory)
 
+        for page in range(2, 180, 1):
+            url = 'https://www.coursera.org/directory/courses?page=' + str(page)
+            yield response.follow(url, self.parse_directory)
+
+        for page in range(2, 18, 1):
+            url = 'https://www.coursera.org/directory/specializations?page=' + str(page)
+            yield response.follow(url, self.parse_directory)
+
     def parse_directory(self, response):
         pages = response.xpath('//*[@class="c-directory-link"]/@href').extract()
-        next_directory = response.xpath('//*[@class="label-text box arrow"]/@href').extract_first()
-        if next_directory is not None:
-            logging.info(response.url)
-            logging.info(next_directory)
-            yield response.follow(next_directory, self.parse_directory)
 
         for page in pages:
             yield response.follow(page, self.parse_page)
