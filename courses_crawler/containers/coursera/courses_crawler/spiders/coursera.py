@@ -103,9 +103,11 @@ class CourseraSpider(scrapy.Spider):
         # COLLABORATION
         # professional-certificates
         instructor = sel.xpath('//*[@class="_1qfi0x77"]/span/text()').extract_first()
-        if section == 'specializations':
+        if instructor is None:
             instructor = sel.xpath('//*[@class="_1qfi0x77 instructor-count-display"]/span/text()').extract_first()
         institution = sel.xpath('//*[@class="_1g3eaodg"]/@title').extract_first()
+        if institution is None:
+            institution = sel.xpath('//*[@class="m-b-1s m-r-1s"]/span/text()').extract_first()
 
         # PROJECTS
         if section == 'projects':

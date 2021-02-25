@@ -30,7 +30,7 @@ class CourseraItem(scrapy.Item):
     title = scrapy.Field()
     rating = scrapy.Field()
     n_ratings = scrapy.Field()
-    n_reviews = scrapy.Field()
+    views = scrapy.Field()
     url = scrapy.Field()
     duration = scrapy.Field()
     difficulty = scrapy.Field()
