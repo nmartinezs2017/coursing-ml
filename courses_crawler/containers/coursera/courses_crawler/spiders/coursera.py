@@ -83,6 +83,7 @@ class CourseraSpider(scrapy.Spider):
         # description
         description_spe = sel.xpath('//*[@class="description"]/*//p/text()').extract()
         description_cou = sel.xpath('//*[@class="m-t-1 description"]/*//p/text()').extract()
+        description_pro = sel.xpath('//*[@class="_g61i7y"]/text()').extract()
         # CHARACTERISTICS
         # characteristics_cou = sel.xpath('//*[@class="_g61i7y"]/text()').extract()
         # spetialization
@@ -111,7 +112,6 @@ class CourseraSpider(scrapy.Spider):
 
         # PROJECTS
         if section == 'projects':
-            description_pro = sel.xpath('//*[@class="_g61i7y"]/text()').extract()
             difficulty = sel.xpath('//*[@class="_1ounhrgz"]/text()').extract_first()
             rating = sel.xpath('//*[@data-test="_16ni8zai m-b-0 rating-text number-rating m-l-1s m-r-1"]/text()').extract_first()
             n_ratings = sel.xpath('//*[@class="_wmgtrl9 m-r-1s"]/span/text()').extract_first()
