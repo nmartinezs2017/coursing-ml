@@ -96,7 +96,7 @@ class CourseraSpider(scrapy.Spider):
         if section == 'learn':
             difficulty = sel.xpath('//*[@class="_16ni8zai m-b-0 m-t-1s"]/text()').extract_first()
             if difficulty is None:
-                difficulty_l2 = sel.xpath('//*[@class="_16ni8zai m-b-0"]/text()').extract()[3]
+                difficulty = sel.xpath('//*[@class="_16ni8zai m-b-0"]/text()').extract()[3]
             duration = sel.xpath('//*[@class="_16ni8zai m-b-0 m-t-1s"]/span/text()').extract_first()
         # LANGUAGE
         # language_cou = sel.xpath('//*[@class="_16ni8zai m-b-0 m-t-1s"]/text()').extract()
@@ -124,7 +124,6 @@ class CourseraSpider(scrapy.Spider):
         l.add_value('id_course', url.split("/")[4])
         l.add_value('title', title)
         l.add_value('difficulty', difficulty)
-        l.add_value('difficulty', difficulty_l2)
         l.add_value('category', category)
         l.add_value('duration', duration)
         l.add_value('duration_week', duration_week)
