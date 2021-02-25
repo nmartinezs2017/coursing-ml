@@ -60,7 +60,7 @@ class CourseraSpider(scrapy.Spider):
         duration = None
         language = None
         difficulty = None
-        n_reviews_spe = None
+        views_spe = None
         # url
         url = response.url
         # section
@@ -74,16 +74,15 @@ class CourseraSpider(scrapy.Spider):
         # RATING
         rating = sel.xpath('//*[@data-test="number-star-rating"]/text()').extract_first()
         n_ratings = sel.xpath('//*[@class="_wmgtrl9 m-r-1s color-white"]/span/text()').extract_first()
-        n_reviews = sel.xpath('//*[@class="_bd90rg"]/*//span/text()').extract_first()
+        views = sel.xpath('//*[@class="_bd90rg"]/*//span/text()').extract_first()
         if section == 'specializations':
-            n_reviews_spe = sel.xpath('//*[@class="_bd90rg"]/*//span/text()').extract_first()
+            views_spe = sel.xpath('//*[@class="_bd90rg"]/*//span/text()').extract_first()
         n_ratings_spe = sel.xpath('//*[@class="_wmgtrl9 color-white ratings-count-expertise-style"]/span/text()').extract_first()
         # skills
         skills = sel.xpath('//*[@class="_t6niqc3"]/span/@title').extract()
         # description
         description_spe = sel.xpath('//*[@class="description"]/*//p/text()').extract()
         description_cou = sel.xpath('//*[@class="m-t-1 description"]/*//p/text()').extract()
-        description_pro = sel.xpath('//*[@class="_g61i7y"]/*//p/text()').extract()
         # CHARACTERISTICS
         # characteristics_cou = sel.xpath('//*[@class="_g61i7y"]/text()').extract()
         # spetialization
@@ -96,6 +95,8 @@ class CourseraSpider(scrapy.Spider):
         # courses
         if section == 'learn':
             difficulty = sel.xpath('//*[@class="_16ni8zai m-b-0 m-t-1s"]/text()').extract_first()
+            if difficulty is None:
+                difficulty_l2 = sel.xpath('//*[@class="_16ni8zai m-b-0"]/text()').extract()[3]
             duration = sel.xpath('//*[@class="_16ni8zai m-b-0 m-t-1s"]/span/text()').extract_first()
         # LANGUAGE
         # language_cou = sel.xpath('//*[@class="_16ni8zai m-b-0 m-t-1s"]/text()').extract()
@@ -106,10 +107,22 @@ class CourseraSpider(scrapy.Spider):
             instructor = sel.xpath('//*[@class="_1qfi0x77 instructor-count-display"]/span/text()').extract_first()
         institution = sel.xpath('//*[@class="_1g3eaodg"]/@title').extract_first()
 
+        # PROJECTS
+        if section == 'projects':
+            description_pro = sel.xpath('//*[@class="_g61i7y"]/text()').extract()
+            difficulty = sel.xpath('//*[@class="_1ounhrgz"]/text()').extract_first()
+            rating = sel.xpath('//*[@data-test="_16ni8zai m-b-0 rating-text number-rating m-l-1s m-r-1"]/text()').extract_first()
+            n_ratings = sel.xpath('//*[@class="_wmgtrl9 m-r-1s"]/span/text()').extract_first()
+            duration = sel.xpath('//*[@class="_1rcyblj"]/text()').extract()[0]
+            enrolled = sel.xpath('//*[@class="_1fpiay2"]/span/strong/span/text()').extract()
+            language = sel.xpath('//*[@class="_1rcyblj"]/text()').extract()[3]
+            instructor = sel.xpath('//*[@class="instructor-name headline-3-text bold"]/text()').extract_first()
+            institution = "Coursera"
         # add values
         l.add_value('id_course', url.split("/")[4])
         l.add_value('title', title)
         l.add_value('difficulty', difficulty)
+        l.add_value('difficulty', difficulty_l2)
         l.add_value('category', category)
         l.add_value('duration', duration)
         l.add_value('duration_week', duration_week)
@@ -124,8 +137,8 @@ class CourseraSpider(scrapy.Spider):
         l.add_value('enrolled', enrolled)
         l.add_value('section', section)
         l.add_value('n_ratings', n_ratings)
-        l.add_value('n_reviews', n_reviews)
-        l.add_value('n_reviews', n_reviews_spe)
+        l.add_value('views', views)
+        l.add_value('views', views_spe)
         l.add_value('n_ratings', n_ratings_spe)
         l.add_value('instructor', instructor)
         l.add_value('institution', institution)
