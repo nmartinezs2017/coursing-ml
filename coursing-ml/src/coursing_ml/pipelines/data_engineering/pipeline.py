@@ -1,48 +1,15 @@
-# Copyright 2020 QuantumBlack Visual Analytics Limited
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#     http://www.apache.org/licenses/LICENSE-2.0
-#
-# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-# EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-# OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, AND
-# NONINFRINGEMENT. IN NO EVENT WILL THE LICENSOR OR OTHER CONTRIBUTORS
-# BE LIABLE FOR ANY CLAIM, DAMAGES, OR OTHER LIABILITY, WHETHER IN AN
-# ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF, OR IN
-# CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-#
-# The QuantumBlack Visual Analytics Limited ("QuantumBlack") name and logo
-# (either separately or in combination, "QuantumBlack Trademarks") are
-# trademarks of QuantumBlack. The License does not grant you any right or
-# license to the QuantumBlack Trademarks. You may not use the QuantumBlack
-# Trademarks or any confusingly similar mark as a trademark for your product,
-# or use the QuantumBlack Trademarks in any other manner that might cause
-# confusion in the marketplace, including but not limited to in advertising,
-# on websites, or on software.
-#
-# See the License for the specific language governing permissions and
-# limitations under the License.
-
-"""Example code for the nodes in the example pipeline. This code is meant
-just for illustrating basic Kedro features.
-
-Delete this when you start working on your own Kedro project.
-"""
+# kedro run --pipeline=de
 
 from kedro.pipeline import Pipeline, node
 
-from .nodes import preprocess_udacity, feature_cleaning, feature_engineering, feature_selection
-
+from .nodes import *
 
 def create_pipeline(**kwargs):
     return Pipeline(
         [
             node(
                 func=preprocess_udacity,
-                inputs="scrapping_data",
+                inputs="udacity_scrapped",
                 outputs="preprocessed_udacity",
                 name="preprocessing_udacity",
             ),
@@ -53,22 +20,46 @@ def create_pipeline(**kwargs):
                 name="data_exploration_report",
             ),
             node(
-                func=feature_cleaning,
+                func=feature_cleaning_udacity,
                 inputs="preprocessed_udacity",
                 outputs="cleaned_udacity",
-                name="feature_cleaning",
+                name="feature_cleaning_udacity",
             ),
             node(
-                func=feature_engineering,
+                func=feature_engineering_udacity,
                 inputs="cleaned_udacity",
                 outputs="fe_udacity",
-                name="feature_engineering",
+                name="feature_engineering_udacity",
             ),
             node(
-                func=feature_selection,
+                func=feature_selection_udacity,
                 inputs="fe_udacity",
                 outputs="features_udacity",
                 name="feature_selection",
+            ),
+            node(
+                func=preprocess_coursera,
+                inputs="coursera_scrapped",
+                outputs=None,
+                name="preprocessing_coursera",
+            ),
+            node(
+                func=feature_cleaning_coursera,
+                inputs="preprocessed_coursera",
+                outputs=None,
+                name="feature_cleaning_coursera",
+            ),
+            node(
+                func=feature_engineering_coursera,
+                inputs="cleaned_coursera",
+                outputs=None,
+                name="feature_engineering_coursera",
+            ),
+            node(
+                func=feature_selection_coursera,
+                inputs="fe_coursera",
+                outputs=None,
+                name="feature_selection_coursera",
             ),
         ]
     )

@@ -44,17 +44,17 @@
 # template. Please feel free to remove it once you remove the example pipeline.
 
 
-scrapping_data:
+udacity_scrapped:
   type: pandas.CSVDataSet
-  filepath: data/01_raw/udacity.csv
+  filepath: data/01_raw/udacity_scrapped.csv
   fs_args:
     open_args_load:
       mode: "rb"
       encoding: "utf-8"
 
-coursera_scrapping:
+coursera_scrapped:
   type: pandas.CSVDataSet
-  filepath: data/01_raw/coursera.csv
+  filepath: data/01_raw/coursera_scrapped.csv
   fs_args:
     open_args_load:
       mode: "rb"
@@ -72,17 +72,61 @@ preprocessed_udacity:
   type: pandas.CSVDataSet
   filepath: data/03_primary/preprocessed_udacity.csv
 
+preprocessed_coursera:
+  type: pandas.CSVDataSet
+  filepath: data/03_primary/preprocessed_coursera.csv
+  fs_args:
+    open_args_load:
+      mode: "rb"
+      encoding: "utf-8"
+  save_args:
+    index: False
+    encoding: "windows-1252"
+
 cleaned_udacity:
   type: pandas.CSVDataSet
   filepath: data/03_primary/cleaned_udacity.csv
+
+cleaned_coursera:
+  type: pandas.CSVDataSet
+  filepath: data/03_primary/cleaned_coursera.csv
+  fs_args:
+    open_args_load:
+      mode: "rb"
+      encoding: "utf-8"
+  save_args:
+    index: False
+    encoding: "windows-1252"
 
 fe_udacity:
   type: pandas.CSVDataSet
   filepath: data/03_primary/fe_udacity.csv
 
+fe_coursera:
+  type: pandas.CSVDataSet
+  filepath: data/03_primary/fe_coursera.csv
+  fs_args:
+    open_args_load:
+      mode: "rb"
+      encoding: "utf-8"
+  save_args:
+    index: False
+    encoding: "windows-1252"
+
 features_udacity:
   type: pandas.CSVDataSet
   filepath: data/04_feature/features_udacity.csv
+
+features_coursera:
+  type: pandas.CSVDataSet
+  filepath: data/04_feature/features_coursera.csv
+  fs_args:
+    open_args_load:
+      mode: "rb"
+      encoding: "utf-8"
+  save_args:
+    index: False
+    encoding: "windows-1252"
 
 clustering_model:
   type: pickle.PickleDataSet
