@@ -217,7 +217,7 @@ def feature_engineering_udacity(df: pd.DataFrame) -> pd.DataFrame:
     enc.fit(X)
     df['difficulty'] = enc.transform(X)
     # use pd.concat to join the new columns with your original dataframe
-    df = pd.concat([df, pd.get_dummies(df['school'], prefix='difficulty')], axis=1)
+    df = pd.concat([df, pd.get_dummies(df['school'], prefix='school')], axis=1)
     # now drop the original 'country' column (you don't need it anymore)
     df.drop(['school'], axis=1, inplace=True)
     # n_reviews - feature transformation
@@ -279,7 +279,7 @@ def feature_selection_coursera(df: pd.DataFrame) -> pd.DataFrame:
     df[numerics] = pt.transform(aux_df)
     numerics = ['int16', 'int32', 'int64', 'float16', 'float32', 'float64']
     num_df = df.select_dtypes(include=numerics)
-    num_df.to_csv('features_coursera.csv')
+    num_df.to_csv('data/04_feature/features_coursera.csv')
     text = ['object']
     text_df = df.select_dtypes(include=text)
-    text_df.to_csv('text_coursera.csv')
+    text_df.to_csv('data/04_feature/coursera_text.csv')

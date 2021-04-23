@@ -7,7 +7,7 @@ from selenium.webdriver import Firefox
 from scrapy.loader import *
 from ..items import UdacityItem
 
-# scrapy crawl udacity -o "udacity.csv"
+# scrapy crawl udacity -o "udacity_scrapped.csv"
 
 class UdacitySpider(scrapy.Spider):
     name = "udacity"

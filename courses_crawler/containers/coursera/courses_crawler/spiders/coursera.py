@@ -8,7 +8,7 @@ import logging
 from selenium.webdriver.chrome.options import Options
 from selenium import webdriver
 
-# scrapy crawl coursera -o "coursera.csv"
+# scrapy crawl coursera -o "coursera_scrapped.csv"
 def set_chrome_options():
     """Sets chrome options for Selenium.
     Chrome options for headless browser is enabled.

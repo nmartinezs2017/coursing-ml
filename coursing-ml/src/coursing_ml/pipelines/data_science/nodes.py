@@ -36,23 +36,47 @@ Delete this when you start working on your own Kedro project.
 import logging
 from typing import Any, Dict
 
+import hdbscan
+from feature_engine.imputation import ArbitraryNumberImputer
 import numpy as np
 import pandas as pd
 from sklearn.cluster import KMeans
 from sentence_transformers import SentenceTransformer, util
+from sklearn.cluster import DBSCAN
 
-def clustering(df: pd.DataFrame) -> pd.DataFrame:
+def clustering_udacity(df: pd.DataFrame) -> pd.DataFrame:
     # borrar columnas innecesarias
     km7 = KMeans(n_clusters=7).fit(df)
     df['Label'] = km7.labels_
 
     return [df, km7]
 
-def generate_embeddings(df: pd.DataFrame) -> pd.DataFrame:
+def clustering_coursera(df: pd.DataFrame) -> pd.DataFrame:
+    # set up the imputer
+    arbitrary_imputer = ArbitraryNumberImputer(arbitrary_number=0)
+    # fit the imputer
+    arbitrary_imputer.fit(df)
+    # transform the data
+    df = arbitrary_imputer.transform(df)
+    clusterer = hdbscan.HDBSCAN(min_cluster_size=50)
+    cluster_labels = clusterer.fit_predict(df)
+    df['Labels'] = cluster_labels
+    return [df, clusterer]
+
+def generate_embeddings_udacity(df: pd.DataFrame) -> pd.DataFrame:
     df['description'] = df.description.replace(np.nan, '', regex=True)
     # borrar columnas innecesarias
     result = [x + '. ' + y for x, y in zip(df['title'], df['description'])]
     # We then load the allenai-specter model with SentenceTransformers
     model = SentenceTransformer('allenai-specter')
     corpus_embeddings = model.encode(result, convert_to_tensor=True)
-    return corpus_embeddings
+    return [corpus_embeddings, model]
+
+
+def generate_embeddings_coursera(df: pd.DataFrame) -> pd.DataFrame:
+    df['description'] = df.description.replace(np.nan, '', regex=True)
+    df['title'] = df.title.replace(np.nan, '', regex=True)
+    model = SentenceTransformer('distiluse-base-multilingual-cased-v2')
+    result = [x + '. ' + y for x, y in zip(df['title'], df['description'])]
+    corpus_embeddings = model.encode(result, convert_to_tensor=True)
+    return [corpus_embeddings, model]

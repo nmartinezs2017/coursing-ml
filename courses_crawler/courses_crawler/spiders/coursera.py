@@ -7,7 +7,7 @@ from selenium.webdriver import Firefox, FirefoxProfile
 from scrapy.loader import *
 from ..items import CourseraItem
 
-# scrapy crawl coursera -o "coursera.csv"
+# scrapy crawl coursera -o "coursera_scrapped.csv"
 
 class CourseraSpider(scrapy.Spider):
     name = "coursera"

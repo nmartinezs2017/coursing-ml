@@ -128,17 +128,37 @@ features_coursera:
     index: False
     encoding: "windows-1252"
 
-clustering_model:
+clustering_model_udacity:
   type: pickle.PickleDataSet
-  filepath: data/06_models/clustering_model.pkl
+  filepath: data/06_models/clustering_model_udacity.pkl
+
+clustering_model_coursera:
+  type: pickle.PickleDataSet
+  filepath: data/06_models/clustering_model_coursera.pkl
 
 clustering_output_udacity:
   type: pandas.CSVDataSet
   filepath: data/07_model_output/clustering_output_udacity.csv
 
-corpus_embeddings:
+clustering_output_coursera:
+  type: pandas.CSVDataSet
+  filepath: data/07_model_output/clustering_output_coursera.csv
+
+corpus_embeddings_udacity:
   type: pickle.PickleDataSet
-  filepath: data/07_model_output/corpus_embeddings.pkl
+  filepath: data/07_model_output/corpus_embeddings_udacity.pkl
+
+corpus_embeddings_coursera:
+  type: pickle.PickleDataSet
+  filepath: data/07_model_output/corpus_embeddings_coursera.pkl
+
+nlp_model_udacity:
+  type: pickle.PickleDataSet
+  filepath: data/06_models/nlp_model_udacity.pkl
+
+nlp_model_coursera:
+  type: pickle.PickleDataSet
+  filepath: data/06_models/nlp_model_coursera.pkl
 
 data_exp_report:
   type: coursing_ml.io.ProfileReportDataSet

@@ -138,6 +138,12 @@ target/
 # celery beat schedule file
 celerybeat-schedule
 
+# large files
+corpus_embeddings_udacity.pkl
+corpus_embeddings_coursera.pkl
+nlp_model_coursera.pkl
+nlp_model_udacity.pkl
+
 # SageMath parsed files
 *.sage.py
 
