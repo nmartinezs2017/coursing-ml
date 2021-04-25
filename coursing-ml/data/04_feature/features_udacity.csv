@@ -1,4 +1,4 @@
-difficulty,duration,free,n_reviews,rating,difficulty_Career Advancement,difficulty_School of Artificial Intelligence,difficulty_School of Autonomous Systems,difficulty_School of Business,difficulty_School of Cloud Computing,difficulty_School of Data Science,difficulty_School of Programming & Development
+difficulty,duration,free,n_reviews,rating,school_Career Advancement,school_School of Artificial Intelligence,school_School of Autonomous Systems,school_School of Business,school_School of Cloud Computing,school_School of Data Science,school_School of Programming & Development
 2.0,2.156885438468934,0,0.9678714859437756,0.5749926620114563,0,0,0,0,0,1,0
 1.0,0.7891277806681579,0,0.9839357429718876,0.7881544125252793,0,0,0,1,0,0,0
 1.0,0.7891277806681579,0,0.93574297188755,0.8092204228561615,0,0,0,1,0,0,0
