@@ -79,9 +79,13 @@ preprocessed_coursera:
     open_args_load:
       mode: "rb"
       encoding: "utf-8"
+    open_args_save:
+      index: False
+      mode: "wb"
+      encoding: "utf-8"
   save_args:
     index: False
-    encoding: "windows-1252"
+    encoding: "utf-8"
 
 cleaned_udacity:
   type: pandas.CSVDataSet
@@ -94,13 +98,51 @@ cleaned_coursera:
     open_args_load:
       mode: "rb"
       encoding: "utf-8"
+    open_args_save:
+      index: False
+      mode: "wb"
+      encoding: "utf-8"
   save_args:
     index: False
-    encoding: "windows-1252"
+    encoding: "utf-8"
 
-fe_udacity:
+categorical_data_udacity:
   type: pandas.CSVDataSet
-  filepath: data/03_primary/fe_udacity.csv
+  filepath: data/03_primary/categorical_data_udacity.csv
+
+numerical_data_udacity:
+  type: pandas.CSVDataSet
+  filepath: data/03_primary/numerical_data_udacity.csv
+
+categorical_data_coursera:
+  type: pandas.CSVDataSet
+  filepath: data/03_primary/categorical_data_coursera.csv
+  fs_args:
+    open_args_load:
+      mode: "rb"
+      encoding: "utf-8"
+    open_args_save:
+      index: False
+      mode: "wb"
+      encoding: "utf-8"
+  save_args:
+    index: False
+    encoding: "utf-8"
+
+numerical_data_coursera:
+  type: pandas.CSVDataSet
+  filepath: data/03_primary/numerical_data_coursera.csv
+  fs_args:
+    open_args_load:
+      mode: "rb"
+      encoding: "utf-8"
+    open_args_save:
+      index: False
+      mode: "wb"
+      encoding: "utf-8"
+  save_args:
+    index: False
+    encoding: "utf-8"
 
 fe_coursera:
   type: pandas.CSVDataSet
@@ -113,20 +155,43 @@ fe_coursera:
     index: False
     encoding: "windows-1252"
 
-features_udacity:
+categorical_features_udacity:
   type: pandas.CSVDataSet
-  filepath: data/04_feature/features_udacity.csv
+  filepath: data/04_feature/categorical_features_udacity.csv
 
-features_coursera:
+numerical_features_udacity:
   type: pandas.CSVDataSet
-  filepath: data/04_feature/features_coursera.csv
+  filepath: data/04_feature/numerical_features_udacity.csv
+
+categorical_features_coursera:
+  type: pandas.CSVDataSet
+  filepath: data/04_feature/categorical_features_coursera.csv
   fs_args:
     open_args_load:
       mode: "rb"
       encoding: "utf-8"
+    open_args_save:
+      index: False
+      mode: "wb"
+      encoding: "utf-8"
   save_args:
     index: False
-    encoding: "windows-1252"
+    encoding: "utf-8"
+
+numerical_features_coursera:
+  type: pandas.CSVDataSet
+  filepath: data/04_feature/numerical_features_coursera.csv
+  fs_args:
+    open_args_load:
+      mode: "rb"
+      encoding: "utf-8"
+    open_args_save:
+      index: False
+      mode: "wb"
+      encoding: "utf-8"
+  save_args:
+    index: False
+    encoding: "utf-8"
 
 clustering_model_udacity:
   type: pickle.PickleDataSet

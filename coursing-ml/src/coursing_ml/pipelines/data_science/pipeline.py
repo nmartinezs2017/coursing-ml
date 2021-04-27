@@ -34,30 +34,29 @@ Delete this when you start working on your own Kedro project.
 
 from kedro.pipeline import Pipeline, node
 
-from .nodes import clustering_udacity, clustering_coursera, generate_embeddings_udacity, generate_embeddings_coursera
-
+from .nodes import *
 
 def create_pipeline(**kwargs):
     return Pipeline(
         [
             node(
                 clustering_udacity,
-                "features_udacity",
+                "numerical_features_udacity",
                 ["clustering_output_udacity", "clustering_model_udacity"],
             ),
             node(
                 clustering_coursera,
-                "features_coursera",
+                "numerical_features_coursera",
                 ["clustering_output_coursera", "clustering_model_coursera"],
             ),
             node(
                 generate_embeddings_udacity,
-                "fe_udacity",
+                "categorical_features_udacity",
                 ["corpus_embeddings_udacity", "nlp_model_udacity"]
             ),
             node(
                 generate_embeddings_coursera,
-                "fe_coursera",
+                "categorical_features_coursera",
                 ["corpus_embeddings_coursera", "nlp_model_coursera"]
             ),
         ]
