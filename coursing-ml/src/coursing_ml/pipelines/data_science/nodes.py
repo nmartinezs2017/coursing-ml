@@ -58,7 +58,7 @@ def clustering_coursera(df: pd.DataFrame) -> pd.DataFrame:
     arbitrary_imputer.fit(df)
     # transform the data
     df = arbitrary_imputer.transform(df)
-    clusterer = hdbscan.HDBSCAN(min_cluster_size=50)
+    clusterer = hdbscan.HDBSCAN(min_cluster_size=50, prediction_data=True)
     cluster_labels = clusterer.fit_predict(df)
     df['Labels'] = cluster_labels
     return [df, clusterer]
