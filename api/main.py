@@ -1,3 +1,5 @@
+import pickle
+
 import hdbscan
 from fastapi import FastAPI
 from typing import Optional
@@ -33,14 +35,6 @@ df_cl_cou = context.catalog.load("clustering_output_coursera")
 # udacity
 ss = StandardScaler()
 mms = MinMaxScaler()
-# coursera
-user_dict = {'rating': [3.0, 4.1, 4.4, 4.5, 4.6, 4.7, 4.8, 4.9, np.Inf]}
-transformer = ArbitraryDiscretiser(
-    binning_dict=user_dict, return_object=False, return_boundaries=False)
-encoder_ins = CountFrequencyEncoder(encoding_method='frequency',
-                                    variables=['instructor', 'institution'])
-median_imputer = MeanMedianImputer(imputation_method='median', variables=['rating'])
-pt = PowerTransformer()
 
 class PerfilUsuario(BaseModel):
     description: str
@@ -50,8 +44,6 @@ class PerfilUsuario(BaseModel):
     n_reviews: int
     rating: int
     institution: str
-    instructor: str
-
 
 @app.get("/")
 def read_root():
@@ -65,37 +57,31 @@ def inicializar_encoders_udacity():
     mms.fit(df_ud[['rating']])
 
 
-def inicializar_encoders_coursera():
-    # rating
-    median_imputer.fit(df_cou)
-    transformer.fit(df_cou)
-    # institution & instructor
-    imputer = CategoricalImputer(variables=['institution', 'instructor'], fill_value='')
-    imputer.fit(df_cou)
-    df_cou['institution'].fillna("", inplace=True)
-    df_cou['instructor'].fillna("", inplace=True)
-    encoder_ins.fit(df_cou[['institution', 'instructor']])
-    # numerical features
-    numerical_features = ['difficulty', 'total_hours', 'enrolled', 'rating']
-    # difficulty
-    df_cou2 = df_cou
-    df_cou2['difficulty'] = df_cou['difficulty'].map({'Beginner': 0, 'Intermediate': 1, 'Advanced': 2})
-    pt.fit(df_cou2[numerical_features])
+def importar_encoders_coursera():
+    pkl_file = open('encoders_coursera.pkl', 'rb')
+    coursera_encoders_dict = pickle.load(pkl_file)
+    coursera_inst_imputer = coursera_encoders_dict["coursera_inst_imputer"]
+    coursera_rating_transformer = coursera_encoders_dict["coursera_rating_transformer"]
+    coursera_inst_encoder = coursera_encoders_dict["coursera_inst_encoder"]
+    coursera_powertransformer = coursera_encoders_dict["coursera_powertransformer"]
+    pkl_file.close()
+    return coursera_inst_imputer, coursera_rating_transformer, coursera_inst_encoder, coursera_powertransformer
 
 
 def convertir_datos_en_features_coursera(perfil: PerfilUsuario):
-    user_difficulty = 0
     if (perfil.difficulty == 'beginner'):
         user_difficulty = 0
     elif (perfil.difficulty == 'intermediate'):
         user_difficulty = 1
     else:
         user_difficulty = 2
-
-    user_transformed = pt.transform([[user_difficulty, perfil.duration, perfil.n_reviews, perfil.rating]])
-    df_user = pd.DataFrame([[perfil.institution, perfil.instructor]], columns=["institution", "instructor"])
-    user_ins = encoder_ins.transform(df_user)
-    return [user_transformed[0][0], user_transformed[0][1], user_transformed[0][2], user_transformed[0][3], user_ins.loc[0][0], user_ins.loc[0][1]]
+    df_user = pd.DataFrame([[user_difficulty, perfil.duration, perfil.n_reviews, perfil.rating, perfil.institution]], columns=["difficulty","total_hours","enrolled", "rating", "institution"])
+    df_user = coursera_rating_transformer.transform(df_user)
+    numerical_features = ['difficulty', 'total_hours', 'enrolled', 'rating']
+    df_user[numerical_features] = coursera_powertransformer.transform(df_user[numerical_features])
+    df_user = coursera_inst_encoder.transform(df_user)
+    print(df_user)
+    return df_user.iloc[0].to_numpy()
 
 
 def convertir_datos_en_features_udacity(perfil: PerfilUsuario):
@@ -155,14 +141,13 @@ def escoger_recomendaciones_coursera(candidatos, cluster_id, vector_usuario):
     resultados = dict()
     indice = 0
     temp_list = []
+    print(cluster_id)
     for key, value in candidatos.items():
         temp = [key, value]
         temp_list.append(temp)
 
     temp_list.sort(key=lambda x: x[1])
     temp_list = temp_list[::-1]
-    print(temp_list)
-    print(cluster_id)
 
     for (candidato_id, score_candidato) in temp_list:
         related_paper = df_cou.iloc[int(candidato_id)]
@@ -172,6 +157,7 @@ def escoger_recomendaciones_coursera(candidatos, cluster_id, vector_usuario):
             resultados[indice] = {'course_id': candidato_id, 'title': related_paper['title'], 'url': related_paper['url']}
             indice = indice + 1
             if (indice==10):
+                print("Ha llegado al limite")
                 break
 
     candidatos_filtrados = []
@@ -183,7 +169,7 @@ def escoger_recomendaciones_coursera(candidatos, cluster_id, vector_usuario):
             rating = related_paper_features['rating']
             if (np.isnan(rating)):
                 rating = 0
-            vector_candidato = [related_paper_features['difficulty'], related_paper_features['total_hours'], related_paper_features['enrolled'], rating, related_paper_features['institution'], related_paper_features['instructor']]
+            vector_candidato = [related_paper_features['difficulty'], related_paper_features['total_hours'], related_paper_features['enrolled'], rating, related_paper_features['institution']]
             cos_sim = dot(vector_candidato, vector_usuario)/(norm(vector_candidato)*norm(vector_usuario))
             candidatos_filtrados.append((candidato_id, cos_sim))
 
@@ -266,7 +252,7 @@ def recommendation_udacity(perfil: PerfilUsuario):
 def recommendation_coursera(perfil: PerfilUsuario):
     query_embedding = model_coursera.encode(perfil.description, convert_to_tensor=True)
 
-    search_hits = util.semantic_search(query_embedding, corpus_embeddings_coursera, top_k=300)
+    search_hits = util.semantic_search(query_embedding, corpus_embeddings_coursera, top_k=100)
     search_hits = search_hits[0]
 
     results = dict()
@@ -275,7 +261,7 @@ def recommendation_coursera(perfil: PerfilUsuario):
         results[str(hit['corpus_id'])] = float(hit['score'])
 
     row_user = convertir_datos_en_features_coursera(perfil)
-    df_user = pd.DataFrame([row_user], columns=["difficulty","total_hours","enrolled", "rating", "institution", "instructor"])
+    df_user = pd.DataFrame([row_user], columns=["difficulty","total_hours","enrolled", "rating", "institution"])
 
     labels, _ = hdbscan.approximate_predict(clustering_model_coursera, df_user)
     cluster_id = labels[0]
@@ -298,4 +284,4 @@ def recommendation_coursera(perfil: PerfilUsuario):
 #     return {'list_courses': list_courses}
 
 inicializar_encoders_udacity()
-inicializar_encoders_coursera()
+coursera_inst_imputer, coursera_rating_transformer, coursera_inst_encoder, coursera_powertransformer = importar_encoders_coursera()

@@ -1,3 +1,5 @@
+import pickle
+
 import pandas as pd
 import re
 import numpy as np
@@ -7,6 +9,8 @@ from feature_engine.encoding import CountFrequencyEncoder
 from feature_engine.encoding import OneHotEncoder
 from feature_engine.discretisation import ArbitraryDiscretiser
 from sklearn.preprocessing import PowerTransformer
+
+encoders_dict = dict()
 
 def extract_time_range(x):
     x = x.rstrip()
@@ -183,9 +187,10 @@ def feature_cleaning_coursera(df: pd.DataFrame) -> pd.DataFrame:
     arbitrary_imputer.fit(df)
     df = arbitrary_imputer.transform(df)
     # institution & instructor
-    imputer = CategoricalImputer(variables=['institution', 'instructor'], fill_value='')
+    imputer = CategoricalImputer(variables=['institution'], fill_value='')
     imputer.fit(df)
     df = imputer.transform(df)
+    encoders_dict["coursera_inst_imputer"] = imputer
     # rating
     median_imputer = MeanMedianImputer(imputation_method='median', variables=['rating'])
     median_imputer.fit(df)
@@ -212,7 +217,7 @@ def feature_selection_coursera(df: pd.DataFrame) -> pd.DataFrame:
     df_categorical = df[categorical_features]
 
     # coger las numerical features que interesan
-    numerical_features = ['difficulty', 'total_hours', 'enrolled', 'rating', 'institution', 'instructor']
+    numerical_features = ['difficulty', 'total_hours', 'enrolled', 'rating', 'institution']
     df_numerical = df[numerical_features]
 
     return [df_categorical, df_numerical]
@@ -258,19 +263,25 @@ def f_engineering_numerical_features_coursera(df: pd.DataFrame) -> pd.DataFrame:
     transformer = ArbitraryDiscretiser(
         binning_dict=user_dict, return_object=False, return_boundaries=False)
     df['rating'] = transformer.fit_transform(df)
+    encoders_dict["coursera_rating_transformer"] = transformer
     print(df)
-    ## institution and instructor
+    ## institution
     df['institution'].fillna("", inplace=True)
-    df['instructor'].fillna("", inplace=True)
     encoder_ins = CountFrequencyEncoder(encoding_method='frequency',
-                                    variables=['instructor', 'institution'])
+                                    variables=['institution'])
     encoder_ins.fit(df)
     df = encoder_ins.transform(df)
+    encoders_dict["coursera_inst_encoder"] = encoder_ins
     ## duration
     numerical_features = ['difficulty', 'total_hours', 'enrolled', 'rating']
     pt = PowerTransformer()
     pt.fit(df[numerical_features])
     print(pt.lambdas_)
     df[numerical_features] = pt.transform(df[numerical_features])
+    encoders_dict["coursera_powertransformer"] = pt
     print(df)
+
+    output = open('encoders_coursera.pkl', 'wb')
+    pickle.dump(encoders_dict, output)
+    output.close()
     return df
