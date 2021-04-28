@@ -230,19 +230,17 @@ def f_engineering_numerical_features_udacity(df: pd.DataFrame) -> pd.DataFrame:
     from sklearn.preprocessing import StandardScaler
     ss = StandardScaler().fit(df[['duration']])
     df['duration'] = ss.transform(df[['duration']])
+    encoders_dict["udacity_duration_ss"] = ss
     # rating - minmax scaling
     from sklearn.preprocessing import MinMaxScaler
     mms = MinMaxScaler().fit(df[['rating']])
     df['rating'] = mms.transform(df[['rating']])
+    encoders_dict["udacity_rating_mms"] = mms
     # difficulty and school - feature encoding
-    from sklearn import preprocessing
-    enc = preprocessing.OrdinalEncoder()
-    X = df[['difficulty']]
-    enc.fit(X)
-    df['difficulty'] = enc.transform(X)
+    df['difficulty'] = df['difficulty'].map({'beginner': 0, 'intermediate': 1, 'advanced': 2})
     # n_reviews - feature transformation
     X = df[['n_reviews']]
-    qt = preprocessing.QuantileTransformer(random_state=0)
+    qt = QuantileTransformer(random_state=0)
     qt.fit(X)
     df['n_reviews'] = qt.transform(X)
 

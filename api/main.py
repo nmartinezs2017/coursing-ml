@@ -36,11 +36,18 @@ df_cl_cou = context.catalog.load("clustering_output_coursera")
 ss = StandardScaler()
 mms = MinMaxScaler()
 
-class PerfilUsuario(BaseModel):
+class PerfilUsuarioUdacity(BaseModel):
     description: str
     difficulty: str
     duration: int
     free: int
+    n_reviews: int
+    rating: int
+
+class PerfilUsuarioCoursera(BaseModel):
+    description: str
+    difficulty: str
+    duration: int
     n_reviews: int
     rating: int
     institution: str
@@ -50,11 +57,13 @@ def read_root():
     return {"Hello": "World"}
 
 
-def inicializar_encoders_udacity():
-    df_ud[['duration']].fillna("", inplace=True)
-    df_ud[['rating']].fillna("", inplace=True)
-    ss.fit(df_ud[['duration']])
-    mms.fit(df_ud[['rating']])
+def importar_encoders_udacity():
+    pkl_file = open('encoders_coursera.pkl', 'rb')
+    encoders_dict = pickle.load(pkl_file)
+    pkl_file.close()
+    ss = encoders_dict["udacity_duration_ss"]
+    mms = encoders_dict["udacity_rating_mms"]
+    return ss, mms
 
 
 def importar_encoders_coursera():
@@ -68,7 +77,7 @@ def importar_encoders_coursera():
     return coursera_inst_imputer, coursera_rating_transformer, coursera_inst_encoder, coursera_powertransformer
 
 
-def convertir_datos_en_features_coursera(perfil: PerfilUsuario):
+def convertir_datos_en_features_coursera(perfil: PerfilUsuarioCoursera):
     if (perfil.difficulty == 'beginner'):
         user_difficulty = 0
     elif (perfil.difficulty == 'intermediate'):
@@ -84,14 +93,13 @@ def convertir_datos_en_features_coursera(perfil: PerfilUsuario):
     return df_user.iloc[0].to_numpy()
 
 
-def convertir_datos_en_features_udacity(perfil: PerfilUsuario):
-    user_difficulty = 1
+def convertir_datos_en_features_udacity(perfil: PerfilUsuarioUdacity):
     if (perfil.difficulty == 'beginner'):
-        user_difficulty = 1
-    elif (perfil.difficulty == 'intermediate'):
-        user_difficulty = 2
-    else:
         user_difficulty = 0
+    elif (perfil.difficulty == 'intermediate'):
+        user_difficulty = 1
+    else:
+        user_difficulty = 2
     user_duration = ss.transform([[perfil.duration]])
     user_free = perfil.free
     user_popularity = 0
@@ -226,7 +234,7 @@ def semantic_search_coursera(title: str, description: Optional[str] = ""):
 
 
 @app.post("/recommend_udacity/")
-def recommendation_udacity(perfil: PerfilUsuario):
+def recommendation_udacity(perfil: PerfilUsuarioUdacity):
     query_embedding = model_udacity.encode(perfil.description, convert_to_tensor=True)
 
     search_hits = util.semantic_search(query_embedding, corpus_embeddings_udacity, top_k=30)
@@ -247,9 +255,8 @@ def recommendation_udacity(perfil: PerfilUsuario):
     return {'list_recommendations': list_recommendations}
 
 
-
 @app.post("/recommend_coursera/")
-def recommendation_coursera(perfil: PerfilUsuario):
+def recommendation_coursera(perfil: PerfilUsuarioCoursera):
     query_embedding = model_coursera.encode(perfil.description, convert_to_tensor=True)
 
     search_hits = util.semantic_search(query_embedding, corpus_embeddings_coursera, top_k=100)
@@ -283,5 +290,5 @@ def recommendation_coursera(perfil: PerfilUsuario):
 #     list_courses = df_cl_ud['Label'].unique().tolist()
 #     return {'list_courses': list_courses}
 
-inicializar_encoders_udacity()
+ss, mms = importar_encoders_udacity()
 coursera_inst_imputer, coursera_rating_transformer, coursera_inst_encoder, coursera_powertransformer = importar_encoders_coursera()
