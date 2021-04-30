@@ -1,25 +1,26 @@
+import os
 import pickle
-
+import sys
 import hdbscan
 from fastapi import FastAPI
 from typing import Optional
 import pandas as pd
 import numpy as np
-from feature_engine.discretisation import ArbitraryDiscretiser
-from feature_engine.encoding import CountFrequencyEncoder
-from feature_engine.imputation import CategoricalImputer, MeanMedianImputer
-from pydantic import BaseModel
-from sentence_transformers import SentenceTransformer, util
-from kedro.framework.context.context import load_context
-from sklearn.preprocessing import StandardScaler, PowerTransformer
-from sklearn.preprocessing import MinMaxScaler
 from numpy import dot
 from numpy.linalg import norm
+from sentence_transformers import util
+# csfp - current_script_folder_path
+csfp = os.path.abspath(os.path.dirname(__file__))
+if csfp not in sys.path:
+    sys.path.insert(0, csfp)
+# import it and invoke it by one of the ways described above
+from search import *
+from models import PerfilUsuarioUdacity, PerfilUsuarioCoursera
+from kedro.framework.context.context import load_context
 
 app = FastAPI()
 
 context = load_context('../coursing-ml/')
-
 model_udacity = context.catalog.load("nlp_model_udacity")
 model_coursera = context.catalog.load("nlp_model_coursera")
 clustering_model_udacity = context.catalog.load("clustering_model_udacity")
@@ -31,26 +32,6 @@ corpus_embeddings_coursera = context.catalog.load("corpus_embeddings_coursera")
 df_cl_ud = context.catalog.load("clustering_output_udacity")
 df_cl_cou = context.catalog.load("clustering_output_coursera")
 
-## Encoders
-# udacity
-ss = StandardScaler()
-mms = MinMaxScaler()
-
-class PerfilUsuarioUdacity(BaseModel):
-    description: str
-    difficulty: str
-    duration: int
-    free: int
-    n_reviews: int
-    rating: int
-
-class PerfilUsuarioCoursera(BaseModel):
-    description: str
-    difficulty: str
-    duration: int
-    n_reviews: int
-    rating: int
-    institution: str
 
 @app.get("/")
 def read_root():
@@ -194,42 +175,15 @@ def escoger_recomendaciones_coursera(candidatos, cluster_id, vector_usuario):
     return resultados
 
 
-def search_courses_udacity(title, description = ""):
-    query_embedding = model_udacity.encode(title+' '+description, convert_to_tensor=True)
-
-    search_hits = util.semantic_search(query_embedding, corpus_embeddings_udacity)
-    search_hits = search_hits[0]  #Get the hits for the first query
-
-    results = dict()
-    for hit in search_hits:
-        related_paper = df_ud.iloc[hit['corpus_id']]
-        results[str(hit['corpus_id'])] = { "score": float(hit['score']), "title": related_paper['title'], "url": related_paper["url"] }
-
-    return dict(results)
-
-def search_courses_coursera(title, description = ""):
-    query_embedding = model_coursera.encode(title+' '+description, convert_to_tensor=True)
-
-    search_hits = util.semantic_search(query_embedding, corpus_embeddings_coursera)
-    search_hits = search_hits[0]  #Get the hits for the first query
-
-    results = dict()
-    for hit in search_hits:
-        related_paper = df_cou.iloc[hit['corpus_id']]
-        results[str(hit['corpus_id'])] = { "score": float(hit['score']), "title": related_paper['title'], "url": related_paper["url"] }
-
-    return dict(results)
-
-
 @app.get("/search_courses_udacity/")
-def semantic_search_udacity(title: str, description: Optional[str] = ""):
-    list_courses_udacity = search_courses_udacity(title, description)
+def semantic_search_udacity(query: str, k: Optional[int] = 10):
+    list_courses_udacity = search_courses_udacity(query, k)
     return list_courses_udacity
 
 
 @app.get("/search_courses_coursera/")
-def semantic_search_coursera(title: str, description: Optional[str] = ""):
-    list_courses_coursera = search_courses_coursera(title, description)
+def semantic_search_coursera(query: str, k: Optional[int] = 10):
+    list_courses_coursera = search_courses_coursera(query, k)
     return list_courses_coursera
 
 
@@ -276,19 +230,6 @@ def recommendation_coursera(perfil: PerfilUsuarioCoursera):
 
     return {'list_recommendations': list_recommendations}
 
-# @app.get("/clustering/course-cluster/{id_course}")
-# def get_course_cluster(id_course: int):
-#    return {'id_course': id_course, 'clustering_id': df_cl_ud.iloc[id_course]['Label']}
-
-# @app.get("/clustering/courses-list/{id_cluster}")
-# def get_list_cluster(id_cluster: int):
-#    list_courses = df_cl_ud[df_cl_ud['Label']==id_cluster].index.tolist()
-#    return {'clustering_id': id_cluster, 'list_courses': list_courses}
-
-# @app.get("/clustering/clusters-list/")
-# def get_list_cluster():
-#     list_courses = df_cl_ud['Label'].unique().tolist()
-#     return {'list_courses': list_courses}
 
 ss, mms = importar_encoders_udacity()
 coursera_inst_imputer, coursera_rating_transformer, coursera_inst_encoder, coursera_powertransformer = importar_encoders_coursera()

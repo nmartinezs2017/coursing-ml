@@ -241,7 +241,7 @@ def autodoc_process_docstring(app, what, name, obj, options, lines):
 
 
 def skip(app, what, name, obj, skip, options):
-    if name == "__init__":
+    if name == "__init__.py":
         return False
     return skip
 
