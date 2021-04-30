@@ -1,3 +1,5 @@
+from typing import List
+
 from pydantic import BaseModel
 
 
@@ -16,3 +18,7 @@ class PerfilUsuarioCoursera(BaseModel):
     n_reviews: int
     rating: int
     institution: str
+
+
+class ContextoUsuarioBusqueda(BaseModel):
+    cursos_vistos: List[int] = []

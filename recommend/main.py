@@ -3,19 +3,21 @@ import pickle
 import sys
 import hdbscan
 from fastapi import FastAPI
-from typing import Optional
+from typing import Optional, List
 import pandas as pd
 import numpy as np
 from numpy import dot
 from numpy.linalg import norm
+from pydantic import BaseModel
 from sentence_transformers import util
 # csfp - current_script_folder_path
+
 csfp = os.path.abspath(os.path.dirname(__file__))
 if csfp not in sys.path:
     sys.path.insert(0, csfp)
 # import it and invoke it by one of the ways described above
 from search import *
-from models import PerfilUsuarioUdacity, PerfilUsuarioCoursera
+from models import PerfilUsuarioUdacity, PerfilUsuarioCoursera, ContextoUsuarioBusqueda
 from kedro.framework.context.context import load_context
 
 app = FastAPI()
@@ -175,15 +177,15 @@ def escoger_recomendaciones_coursera(candidatos, cluster_id, vector_usuario):
     return resultados
 
 
-@app.get("/search_courses_udacity/")
-def semantic_search_udacity(query: str, k: Optional[int] = 10):
-    list_courses_udacity = search_courses_udacity(query, k)
+@app.post("/search_courses_udacity/")
+def semantic_search_udacity(query: str, contexto: Optional[ContextoUsuarioBusqueda], k: Optional[int] = 10):
+    list_courses_udacity = search_courses_udacity(query, contexto.cursos_vistos, k)
     return list_courses_udacity
 
 
-@app.get("/search_courses_coursera/")
-def semantic_search_coursera(query: str, k: Optional[int] = 10):
-    list_courses_coursera = search_courses_coursera(query, k)
+@app.post("/search_courses_coursera/")
+def semantic_search_coursera(query: str, contexto: Optional[ContextoUsuarioBusqueda], k: Optional[int] = 10):
+    list_courses_coursera = search_courses_coursera(query, contexto.cursos_vistos, k)
     return list_courses_coursera
 
 

@@ -27,27 +27,31 @@ def top_k_retrieval(name_model, query_embedding, k = 10):
     return search_hits
 
 
-def search_courses_udacity(query, k=10):
-    query_embedding = query_understanding("udacity", query)
-
-    top_k = top_k_retrieval("udacity", query_embedding, k)
-
+def result_ranking(top_k, lista_descartados):
     results = dict()
     for hit in top_k:
         related_paper = df_ud.iloc[hit['corpus_id']]
-        results[str(hit['corpus_id'])] = {"score": float(hit['score']), "title": related_paper['title'], "url": related_paper["url"] }
-
+        id_hit = int(hit['corpus_id'])
+        if id_hit not in lista_descartados:
+            results[str(hit['corpus_id'])] = {"score": float(hit['score']), "title": related_paper['title'], "url": related_paper["url"] }
     return results
 
 
-def search_courses_coursera(query, k=10):
+def search_courses_udacity(query, contexto, k=10):
+    query_embedding = query_understanding("udacity", query)
+    len_context = len(contexto)
+
+    top_k = top_k_retrieval("udacity", query_embedding, k+len_context)
+
+    results = result_ranking(top_k, contexto)
+    return results
+
+
+def search_courses_coursera(query, contexto, k=10):
     query_embedding = query_understanding("coursera", query)
+    len_context = len(contexto)
 
-    top_k = top_k_retrieval("coursera", query_embedding, k)
+    top_k = top_k_retrieval("coursera", query_embedding, k+len_context)
 
-    results = dict()
-    for hit in top_k:
-        related_paper = df_cou.iloc[hit['corpus_id']]
-        results[str(hit['corpus_id'])] = { "score": float(hit['score']), "title": related_paper['title'], "url": related_paper["url"] }
-
+    results = result_ranking(top_k, contexto)
     return results
