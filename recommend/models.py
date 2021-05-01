@@ -11,6 +11,7 @@ class PerfilUsuarioUdacity(BaseModel):
     n_reviews: int
     rating: int
 
+
 class PerfilUsuarioCoursera(BaseModel):
     description: str
     difficulty: str
@@ -20,5 +21,15 @@ class PerfilUsuarioCoursera(BaseModel):
     institution: str
 
 
-class ContextoUsuarioBusqueda(BaseModel):
+class ContextoUsuario(BaseModel):
     cursos_vistos: List[int] = []
+
+
+class PerfilUsuarioExplorar(BaseModel):
+    description: str
+    difficulty: str = 'beginner'
+    duration: int = 10
+    free: int = 1
+    n_reviews: int = 100
+    rating: float = 4.7
+    institution: str = ""

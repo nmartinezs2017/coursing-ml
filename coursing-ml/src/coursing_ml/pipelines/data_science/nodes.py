@@ -60,7 +60,7 @@ def clustering_coursera(df: pd.DataFrame) -> pd.DataFrame:
     df = arbitrary_imputer.transform(df)
     clusterer = hdbscan.HDBSCAN(min_cluster_size=50, prediction_data=True)
     cluster_labels = clusterer.fit_predict(df)
-    df['Labels'] = cluster_labels
+    df['Label'] = cluster_labels
     return [df, clusterer]
 
 def generate_embeddings_udacity(df: pd.DataFrame) -> pd.DataFrame:

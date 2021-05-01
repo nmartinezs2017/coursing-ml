@@ -10,14 +10,12 @@ from numpy import dot
 from numpy.linalg import norm
 from pydantic import BaseModel
 from sentence_transformers import util
-# csfp - current_script_folder_path
-
 csfp = os.path.abspath(os.path.dirname(__file__))
 if csfp not in sys.path:
     sys.path.insert(0, csfp)
-# import it and invoke it by one of the ways described above
 from search import *
-from models import PerfilUsuarioUdacity, PerfilUsuarioCoursera, ContextoUsuarioBusqueda
+from explore import *
+from models import PerfilUsuarioUdacity, PerfilUsuarioCoursera, PerfilUsuarioExplorar, ContextoUsuario
 from kedro.framework.context.context import load_context
 
 app = FastAPI()
@@ -41,17 +39,19 @@ def read_root():
 
 
 def importar_encoders_udacity():
-    pkl_file = open('encoders_coursera.pkl', 'rb')
-    encoders_dict = pickle.load(pkl_file)
+    pkl_file = open('encoders_udacity.pkl', 'rb')
+    encoders_udacity = pickle.load(pkl_file)
     pkl_file.close()
-    ss = encoders_dict["udacity_duration_ss"]
-    mms = encoders_dict["udacity_rating_mms"]
+    print(encoders_udacity)
+    ss = encoders_udacity["udacity_duration_ss"]
+    mms = encoders_udacity["udacity_rating_mms"]
     return ss, mms
 
 
 def importar_encoders_coursera():
     pkl_file = open('encoders_coursera.pkl', 'rb')
     coursera_encoders_dict = pickle.load(pkl_file)
+    print(coursera_encoders_dict)
     coursera_inst_imputer = coursera_encoders_dict["coursera_inst_imputer"]
     coursera_rating_transformer = coursera_encoders_dict["coursera_rating_transformer"]
     coursera_inst_encoder = coursera_encoders_dict["coursera_inst_encoder"]
@@ -143,7 +143,7 @@ def escoger_recomendaciones_coursera(candidatos, cluster_id, vector_usuario):
     for (candidato_id, score_candidato) in temp_list:
         related_paper = df_cou.iloc[int(candidato_id)]
         related_paper_features = df_cl_cou.iloc[int(candidato_id)]
-        c_id_candidato = related_paper_features['Labels']
+        c_id_candidato = related_paper_features['Label']
         if (c_id_candidato == cluster_id):
             resultados[indice] = {'course_id': candidato_id, 'title': related_paper['title'], 'url': related_paper['url']}
             indice = indice + 1
@@ -155,7 +155,7 @@ def escoger_recomendaciones_coursera(candidatos, cluster_id, vector_usuario):
     for (candidato_id, score_candidato) in candidatos.items():
         # related_paper = df_ud.iloc[int(candidato_id)]
         related_paper_features = df_cl_cou.iloc[int(candidato_id)]
-        c_id_candidato = related_paper_features['Labels']
+        c_id_candidato = related_paper_features['Label']
         if (c_id_candidato != cluster_id):
             rating = related_paper_features['rating']
             if (np.isnan(rating)):
@@ -178,13 +178,13 @@ def escoger_recomendaciones_coursera(candidatos, cluster_id, vector_usuario):
 
 
 @app.post("/search_courses_udacity/")
-def semantic_search_udacity(query: str, contexto: Optional[ContextoUsuarioBusqueda], k: Optional[int] = 10):
+def semantic_search_udacity(query: str, contexto: Optional[ContextoUsuario], k: Optional[int] = 10):
     list_courses_udacity = search_courses_udacity(query, contexto.cursos_vistos, k)
     return list_courses_udacity
 
 
 @app.post("/search_courses_coursera/")
-def semantic_search_coursera(query: str, contexto: Optional[ContextoUsuarioBusqueda], k: Optional[int] = 10):
+def semantic_search_coursera(query: str, contexto: Optional[ContextoUsuario], k: Optional[int] = 10):
     list_courses_coursera = search_courses_coursera(query, contexto.cursos_vistos, k)
     return list_courses_coursera
 
@@ -233,5 +233,13 @@ def recommendation_coursera(perfil: PerfilUsuarioCoursera):
     return {'list_recommendations': list_recommendations}
 
 
+@app.post("/explore/")
+def explore_courses(perfil: PerfilUsuarioExplorar, contexto: Optional[ContextoUsuario], k: Optional[int] = 10):
+    list_courses_udacity = explore_courses_udacity(perfil, contexto,  k)
+    list_courses_coursera = explore_courses_coursera(perfil, contexto, k)
+    return {"courses_udacity" : list_courses_udacity, "courses_coursera": list_courses_coursera}
+
+
+##### inicialización #####
 ss, mms = importar_encoders_udacity()
 coursera_inst_imputer, coursera_rating_transformer, coursera_inst_encoder, coursera_powertransformer = importar_encoders_coursera()

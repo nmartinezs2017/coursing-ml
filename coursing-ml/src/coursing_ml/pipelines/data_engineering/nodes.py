@@ -10,7 +10,8 @@ from feature_engine.encoding import OneHotEncoder
 from feature_engine.discretisation import ArbitraryDiscretiser
 from sklearn.preprocessing import PowerTransformer
 
-encoders_dict = dict()
+encoders_dict_coursera = dict()
+encoders_dict_udacity = dict()
 
 def extract_time_range(x):
     x = x.rstrip()
@@ -174,6 +175,8 @@ def feature_cleaning_coursera(df: pd.DataFrame) -> pd.DataFrame:
     from feature_engine.imputation import CategoricalImputer
     from feature_engine.imputation import ArbitraryNumberImputer
     from feature_engine.imputation import MeanMedianImputer
+    # difficulty
+    df['difficulty'] = df['difficulty'].map({'Beginner': 'beginner', 'Intermediate': 'intermediate', 'Advanced': 'advanced'})
     # subcategory
     missingdata_imputer = DropMissingData(variables=['subcategory'])
     missingdata_imputer.fit(df)
@@ -190,7 +193,7 @@ def feature_cleaning_coursera(df: pd.DataFrame) -> pd.DataFrame:
     imputer = CategoricalImputer(variables=['institution'], fill_value='')
     imputer.fit(df)
     df = imputer.transform(df)
-    encoders_dict["coursera_inst_imputer"] = imputer
+    encoders_dict_coursera["coursera_inst_imputer"] = imputer
     # rating
     median_imputer = MeanMedianImputer(imputation_method='median', variables=['rating'])
     median_imputer.fit(df)
@@ -230,12 +233,12 @@ def f_engineering_numerical_features_udacity(df: pd.DataFrame) -> pd.DataFrame:
     from sklearn.preprocessing import StandardScaler
     ss = StandardScaler().fit(df[['duration']])
     df['duration'] = ss.transform(df[['duration']])
-    encoders_dict["udacity_duration_ss"] = ss
+    encoders_dict_udacity["udacity_duration_ss"] = ss
     # rating - minmax scaling
     from sklearn.preprocessing import MinMaxScaler
     mms = MinMaxScaler().fit(df[['rating']])
     df['rating'] = mms.transform(df[['rating']])
-    encoders_dict["udacity_rating_mms"] = mms
+    encoders_dict_udacity["udacity_rating_mms"] = mms
     # difficulty and school - feature encoding
     df['difficulty'] = df['difficulty'].map({'beginner': 0, 'intermediate': 1, 'advanced': 2})
     # n_reviews - feature transformation
@@ -243,7 +246,9 @@ def f_engineering_numerical_features_udacity(df: pd.DataFrame) -> pd.DataFrame:
     qt = QuantileTransformer(random_state=0)
     qt.fit(X)
     df['n_reviews'] = qt.transform(X)
-
+    output = open('encoders_udacity.pkl', 'wb')
+    pickle.dump(encoders_dict_udacity, output)
+    output.close()
     return df
 
 
@@ -254,14 +259,14 @@ def f_engineering_numerical_features_coursera(df: pd.DataFrame) -> pd.DataFrame:
     print(df)
     ## difficulty
     df['difficulty'].fillna("Beginner", inplace=True)
-    df['difficulty'] = df['difficulty'].map({'Beginner': 0, 'Intermediate': 1, 'Advanced': 2})
+    df['difficulty'] = df['difficulty'].map({'beginner': 0, 'intermediate': 1, 'advanced': 2})
     print(df)
     ## rating
     user_dict = {'rating': [3.0, 4.1, 4.4, 4.5, 4.6, 4.7, 4.8, 4.9, np.Inf]}
     transformer = ArbitraryDiscretiser(
         binning_dict=user_dict, return_object=False, return_boundaries=False)
     df['rating'] = transformer.fit_transform(df)
-    encoders_dict["coursera_rating_transformer"] = transformer
+    encoders_dict_coursera["coursera_rating_transformer"] = transformer
     print(df)
     ## institution
     df['institution'].fillna("", inplace=True)
@@ -269,17 +274,17 @@ def f_engineering_numerical_features_coursera(df: pd.DataFrame) -> pd.DataFrame:
                                     variables=['institution'])
     encoder_ins.fit(df)
     df = encoder_ins.transform(df)
-    encoders_dict["coursera_inst_encoder"] = encoder_ins
+    encoders_dict_coursera["coursera_inst_encoder"] = encoder_ins
     ## duration
     numerical_features = ['difficulty', 'total_hours', 'enrolled', 'rating']
     pt = PowerTransformer()
     pt.fit(df[numerical_features])
     print(pt.lambdas_)
     df[numerical_features] = pt.transform(df[numerical_features])
-    encoders_dict["coursera_powertransformer"] = pt
+    encoders_dict_coursera["coursera_powertransformer"] = pt
     print(df)
 
     output = open('encoders_coursera.pkl', 'wb')
-    pickle.dump(encoders_dict, output)
+    pickle.dump(encoders_dict_coursera, output)
     output.close()
     return df
