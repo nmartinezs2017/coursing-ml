@@ -27,7 +27,10 @@ def calcular_contenido_similitud(perfil, curso):
 def filtrar_cursos(cursos_candidatos, contexto):
     resultado = []
     for candidato_id, score in cursos_candidatos:
-        if candidato_id not in contexto.cursos_descartados:
+        curso_candidato = get_curso_coursera(candidato_id)
+        idioma_correcto = curso_candidato.language in contexto.lista_idiomas
+        nuevo_contenido = candidato_id not in contexto.cursos_descartados
+        if idioma_correcto and nuevo_contenido:
             resultado.append((candidato_id, score))
     return resultado
 
@@ -35,12 +38,10 @@ def filtrar_cursos(cursos_candidatos, contexto):
 def explore_courses_udacity(perfil, contexto, k):
     # crear feature usuario udacity
     feature_usuario = convertir_datos_en_features_udacity(perfil)
-    print(feature_usuario)
     # buscar su cluster
     cluster_id = predecir_cluster_udacity(feature_usuario)
     print(cluster_id)
     # crear lista
-    print(df_cl_ud)
     list_id_courses = df_cl_ud[df_cl_ud['Label'] == cluster_id].index.tolist()
     print(list_id_courses)
     cursos_candidatos = []

@@ -16,6 +16,10 @@ df_ud = context.catalog.load("cleaned_udacity")
 df_cou = context.catalog.load("cleaned_coursera")
 
 
+def get_curso_coursera(id: int):
+    return df_cou.iloc[id]
+
+
 def importar_encoders_udacity():
     pkl_file = open('encoders_udacity.pkl', 'rb')
     encoders_dict = pickle.load(pkl_file)

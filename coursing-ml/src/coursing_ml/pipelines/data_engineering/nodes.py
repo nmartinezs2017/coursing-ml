@@ -120,6 +120,7 @@ def map_boolean_to_int(df, field) -> pd.DataFrame:
 
 
 def preprocess_udacity(df: pd.DataFrame) -> pd.DataFrame:
+    df['language'] = 'English'
     df['n_reviews'] = df['n_reviews'].apply(extract_n_element, n=0)
     df['free'] = df['free'].str.strip('[]')
     df['rating'] = df['rating'].apply(extract_n_element, n=0)

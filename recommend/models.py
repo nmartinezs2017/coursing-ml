@@ -3,7 +3,7 @@ from pydantic import BaseModel
 
 class ContextoUsuario(BaseModel):
     cursos_descartados: List[int] = []
-
+    lista_idiomas: List[str] = []
 
 class PerfilUsuario(BaseModel):
     description: str

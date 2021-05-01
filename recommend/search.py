@@ -27,10 +27,10 @@ def top_k_retrieval(name_model, query_embedding, k = 10):
     return search_hits
 
 
-def result_ranking(top_k, lista_descartados):
+def result_ranking(top_k, lista_descartados, df):
     results = dict()
     for hit in top_k:
-        related_course = df_ud.iloc[hit['corpus_id']]
+        related_course = df.iloc[hit['corpus_id']]
         id_hit = int(hit['corpus_id'])
         if id_hit not in lista_descartados:
             results[str(hit['corpus_id'])] = {"score": float(hit['score']), "title": related_course['title'], "url": related_course["url"] }
@@ -43,7 +43,7 @@ def search_courses_udacity(query, contexto, k=10):
 
     top_k = top_k_retrieval("udacity", query_embedding, k+len_context)
 
-    results = result_ranking(top_k, contexto)
+    results = result_ranking(top_k, contexto, df_ud)
     return results
 
 
@@ -53,5 +53,5 @@ def search_courses_coursera(query, contexto, k=10):
 
     top_k = top_k_retrieval("coursera", query_embedding, k+len_context)
 
-    results = result_ranking(top_k, contexto)
+    results = result_ranking(top_k, contexto, df_cou)
     return results
