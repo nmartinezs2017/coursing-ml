@@ -30,10 +30,10 @@ def top_k_retrieval(name_model, query_embedding, k = 10):
 def result_ranking(top_k, lista_descartados):
     results = dict()
     for hit in top_k:
-        related_paper = df_ud.iloc[hit['corpus_id']]
+        related_course = df_ud.iloc[hit['corpus_id']]
         id_hit = int(hit['corpus_id'])
         if id_hit not in lista_descartados:
-            results[str(hit['corpus_id'])] = {"score": float(hit['score']), "title": related_paper['title'], "url": related_paper["url"] }
+            results[str(hit['corpus_id'])] = {"score": float(hit['score']), "title": related_course['title'], "url": related_course["url"] }
     return results
 
 

@@ -15,7 +15,7 @@ if csfp not in sys.path:
     sys.path.insert(0, csfp)
 from search import *
 from explore import *
-from models import PerfilUsuarioUdacity, PerfilUsuarioCoursera, PerfilUsuarioExplorar, ContextoUsuario
+from models import PerfilUsuario, ContextoUsuario
 from kedro.framework.context.context import load_context
 
 app = FastAPI()
@@ -60,7 +60,7 @@ def importar_encoders_coursera():
     return coursera_inst_imputer, coursera_rating_transformer, coursera_inst_encoder, coursera_powertransformer
 
 
-def convertir_datos_en_features_coursera(perfil: PerfilUsuarioCoursera):
+def convertir_datos_en_features_coursera(perfil: PerfilUsuario):
     if (perfil.difficulty == 'beginner'):
         user_difficulty = 0
     elif (perfil.difficulty == 'intermediate'):
@@ -76,7 +76,7 @@ def convertir_datos_en_features_coursera(perfil: PerfilUsuarioCoursera):
     return df_user.iloc[0].to_numpy()
 
 
-def convertir_datos_en_features_udacity(perfil: PerfilUsuarioUdacity):
+def convertir_datos_en_features_udacity(perfil: PerfilUsuario):
     if (perfil.difficulty == 'beginner'):
         user_difficulty = 0
     elif (perfil.difficulty == 'intermediate'):
@@ -95,23 +95,23 @@ def escoger_recomendaciones_udacity(candidatos, cluster_id, vector_usuario):
     resultados = dict()
     indice = 0
     for (candidato_id, score_candidato) in candidatos.items():
-        related_paper = df_ud.iloc[int(candidato_id)]
-        related_paper_features = df_cl_ud.iloc[int(candidato_id)]
-        c_id_candidato = related_paper_features['Label']
+        related_course = df_ud.iloc[int(candidato_id)]
+        related_course_features = df_cl_ud.iloc[int(candidato_id)]
+        c_id_candidato = related_course_features['Label']
         if (c_id_candidato == cluster_id):
-            resultados[indice] = {'course_id': candidato_id, 'title': related_paper['title'], 'url': related_paper['url']}
+            resultados[indice] = {'course_id': candidato_id, 'title': related_course['title'], 'url': related_course['url']}
             indice = indice + 1
 
     candidatos_filtrados = []
     for (candidato_id, score_candidato) in candidatos.items():
-        # related_paper = df_ud.iloc[int(candidato_id)]
-        related_paper_features = df_cl_ud.iloc[int(candidato_id)]
-        c_id_candidato = related_paper_features['Label']
+        # related_course = df_ud.iloc[int(candidato_id)]
+        related_course_features = df_cl_ud.iloc[int(candidato_id)]
+        c_id_candidato = related_course_features['Label']
         if (c_id_candidato != cluster_id):
-            rating = related_paper_features['rating']
+            rating = related_course_features['rating']
             if (np.isnan(rating)):
                 rating = 0
-            vector_candidato = [related_paper_features['difficulty'], related_paper_features['duration'], related_paper_features['n_reviews'], rating, related_paper_features['free']]
+            vector_candidato = [related_course_features['difficulty'], related_course_features['duration'], related_course_features['n_reviews'], rating, related_course_features['free']]
             cos_sim = dot(vector_candidato, vector_usuario)/(norm(vector_candidato)*norm(vector_usuario))
             candidatos_filtrados.append((candidato_id, cos_sim))
 
@@ -120,8 +120,8 @@ def escoger_recomendaciones_udacity(candidatos, cluster_id, vector_usuario):
     c_f_indice = 0
     while(indice < 10) and (c_f_indice < len(candidatos_filtrados)):
         c_f_id = candidatos_filtrados[c_f_indice][0]
-        related_paper = df_ud.iloc[int(c_f_id)]
-        resultados[indice] = {'course_id': candidatos_filtrados[c_f_indice][0], 'title': related_paper['title'], 'url': related_paper['url']}
+        related_course = df_ud.iloc[int(c_f_id)]
+        resultados[indice] = {'course_id': candidatos_filtrados[c_f_indice][0], 'title': related_course['title'], 'url': related_course['url']}
         c_f_indice = c_f_indice + 1
         indice = indice + 1
 
@@ -141,11 +141,11 @@ def escoger_recomendaciones_coursera(candidatos, cluster_id, vector_usuario):
     temp_list = temp_list[::-1]
 
     for (candidato_id, score_candidato) in temp_list:
-        related_paper = df_cou.iloc[int(candidato_id)]
-        related_paper_features = df_cl_cou.iloc[int(candidato_id)]
-        c_id_candidato = related_paper_features['Label']
+        related_course = df_cou.iloc[int(candidato_id)]
+        related_course_features = df_cl_cou.iloc[int(candidato_id)]
+        c_id_candidato = related_course_features['Label']
         if (c_id_candidato == cluster_id):
-            resultados[indice] = {'course_id': candidato_id, 'title': related_paper['title'], 'url': related_paper['url']}
+            resultados[indice] = {'course_id': candidato_id, 'title': related_course['title'], 'url': related_course['url']}
             indice = indice + 1
             if (indice==10):
                 print("Ha llegado al limite")
@@ -153,14 +153,14 @@ def escoger_recomendaciones_coursera(candidatos, cluster_id, vector_usuario):
 
     candidatos_filtrados = []
     for (candidato_id, score_candidato) in candidatos.items():
-        # related_paper = df_ud.iloc[int(candidato_id)]
-        related_paper_features = df_cl_cou.iloc[int(candidato_id)]
-        c_id_candidato = related_paper_features['Label']
+        # related_course = df_ud.iloc[int(candidato_id)]
+        related_course_features = df_cl_cou.iloc[int(candidato_id)]
+        c_id_candidato = related_course_features['Label']
         if (c_id_candidato != cluster_id):
-            rating = related_paper_features['rating']
+            rating = related_course_features['rating']
             if (np.isnan(rating)):
                 rating = 0
-            vector_candidato = [related_paper_features['difficulty'], related_paper_features['total_hours'], related_paper_features['enrolled'], rating, related_paper_features['institution']]
+            vector_candidato = [related_course_features['difficulty'], related_course_features['total_hours'], related_course_features['enrolled'], rating, related_course_features['institution']]
             cos_sim = dot(vector_candidato, vector_usuario)/(norm(vector_candidato)*norm(vector_usuario))
             candidatos_filtrados.append((candidato_id, cos_sim))
 
@@ -169,8 +169,8 @@ def escoger_recomendaciones_coursera(candidatos, cluster_id, vector_usuario):
     c_f_indice = 0
     while(indice < 10) and (c_f_indice < len(candidatos_filtrados)):
         c_f_id = candidatos_filtrados[c_f_indice][0]
-        related_paper = df_cou.iloc[int(c_f_id)]
-        resultados[indice] = {'course_id': candidatos_filtrados[c_f_indice][0], 'title': related_paper['title'], 'url': related_paper['url']}
+        related_course = df_cou.iloc[int(c_f_id)]
+        resultados[indice] = {'course_id': candidatos_filtrados[c_f_indice][0], 'title': related_course['title'], 'url': related_course['url']}
         c_f_indice = c_f_indice + 1
         indice = indice + 1
 
@@ -179,18 +179,18 @@ def escoger_recomendaciones_coursera(candidatos, cluster_id, vector_usuario):
 
 @app.post("/search_courses_udacity/")
 def semantic_search_udacity(query: str, contexto: Optional[ContextoUsuario], k: Optional[int] = 10):
-    list_courses_udacity = search_courses_udacity(query, contexto.cursos_vistos, k)
+    list_courses_udacity = search_courses_udacity(query, contexto.cursos_descartados, k)
     return list_courses_udacity
 
 
 @app.post("/search_courses_coursera/")
 def semantic_search_coursera(query: str, contexto: Optional[ContextoUsuario], k: Optional[int] = 10):
-    list_courses_coursera = search_courses_coursera(query, contexto.cursos_vistos, k)
+    list_courses_coursera = search_courses_coursera(query, contexto.cursos_descartados, k)
     return list_courses_coursera
 
 
 @app.post("/recommend_udacity/")
-def recommendation_udacity(perfil: PerfilUsuarioUdacity):
+def recommendation_udacity(perfil: PerfilUsuario):
     query_embedding = model_udacity.encode(perfil.description, convert_to_tensor=True)
 
     search_hits = util.semantic_search(query_embedding, corpus_embeddings_udacity, top_k=30)
@@ -198,7 +198,7 @@ def recommendation_udacity(perfil: PerfilUsuarioUdacity):
 
     results = dict()
     for hit in search_hits:
-        # related_paper = df_ud.iloc[hit['corpus_id']]
+        # related_course = df_ud.iloc[hit['corpus_id']]
         results[str(hit['corpus_id'])] = float(hit['score'])
 
     row_user = convertir_datos_en_features_udacity(perfil)
@@ -212,7 +212,7 @@ def recommendation_udacity(perfil: PerfilUsuarioUdacity):
 
 
 @app.post("/recommend_coursera/")
-def recommendation_coursera(perfil: PerfilUsuarioCoursera):
+def recommendation_coursera(perfil: PerfilUsuario):
     query_embedding = model_coursera.encode(perfil.description, convert_to_tensor=True)
 
     search_hits = util.semantic_search(query_embedding, corpus_embeddings_coursera, top_k=100)
@@ -220,7 +220,7 @@ def recommendation_coursera(perfil: PerfilUsuarioCoursera):
 
     results = dict()
     for hit in search_hits:
-        # related_paper = df_ud.iloc[hit['corpus_id']]
+        # related_course = df_ud.iloc[hit['corpus_id']]
         results[str(hit['corpus_id'])] = float(hit['score'])
 
     row_user = convertir_datos_en_features_coursera(perfil)
@@ -234,7 +234,7 @@ def recommendation_coursera(perfil: PerfilUsuarioCoursera):
 
 
 @app.post("/explore/")
-def explore_courses(perfil: PerfilUsuarioExplorar, contexto: Optional[ContextoUsuario], k: Optional[int] = 10):
+def explore_courses(perfil: PerfilUsuario, contexto: Optional[ContextoUsuario], k: Optional[int] = 10):
     list_courses_udacity = explore_courses_udacity(perfil, contexto,  k)
     list_courses_coursera = explore_courses_coursera(perfil, contexto, k)
     return {"courses_udacity" : list_courses_udacity, "courses_coursera": list_courses_coursera}

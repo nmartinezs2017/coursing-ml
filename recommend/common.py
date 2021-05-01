@@ -36,7 +36,7 @@ def importar_encoders_coursera():
     return coursera_inst_imputer, coursera_rating_transformer, coursera_inst_encoder, coursera_powertransformer
 
 
-def convertir_datos_en_features_coursera(perfil: PerfilUsuarioCoursera):
+def convertir_datos_en_features_coursera(perfil: PerfilUsuario):
     if (perfil.difficulty == 'beginner'):
         user_difficulty = 0
     elif (perfil.difficulty == 'intermediate'):
@@ -52,7 +52,7 @@ def convertir_datos_en_features_coursera(perfil: PerfilUsuarioCoursera):
     return df_user.iloc[0].to_numpy()
 
 
-def convertir_datos_en_features_udacity(perfil: PerfilUsuarioUdacity):
+def convertir_datos_en_features_udacity(perfil: PerfilUsuario):
     if (perfil.difficulty == 'beginner'):
         user_difficulty = 0
     elif (perfil.difficulty == 'intermediate'):

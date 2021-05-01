@@ -27,7 +27,7 @@ def calcular_contenido_similitud(perfil, curso):
 def filtrar_cursos(cursos_candidatos, contexto):
     resultado = []
     for candidato_id, score in cursos_candidatos:
-        if candidato_id not in contexto.cursos_vistos:
+        if candidato_id not in contexto.cursos_descartados:
             resultado.append((candidato_id, score))
     return resultado
 
@@ -59,8 +59,8 @@ def explore_courses_udacity(perfil, contexto, k):
     resultados = dict()
     while (indice < k) and (indice < len(cursos_filtrados)):
         id_course, _ = cursos_filtrados[indice]
-        related_paper = df_ud.iloc[id_course]
-        resultados[id_course] = {'title': related_paper['title'], 'url': related_paper['url']}
+        related_course = df_ud.iloc[id_course]
+        resultados[id_course] = {'title': related_course['title'], 'url': related_course['url']}
         indice = indice + 1
 
     return resultados
