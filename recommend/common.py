@@ -70,6 +70,10 @@ def calcular_similitud_contenido_coursera(perfil_description, curso_description)
     return cos_score
 
 
+def get_curso_udacity(id: int):
+    return df_ud.iloc[id]
+
+
 def get_curso_coursera(id: int):
     return df_cou.iloc[id]
 

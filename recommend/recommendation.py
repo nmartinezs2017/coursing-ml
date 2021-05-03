@@ -83,9 +83,9 @@ def escoger_recomendaciones_coursera(candidatos_ids, vector_usuario, contexto, k
 
     return resultados
 
-def crear_lista_recomendaciones_udacity(perfil, contexto, k):
+def crear_lista_recomendaciones_udacity(perfil, contexto, k, query = ""):
     # buscar cursos que por contenido puedan interesar al usuario
-    query_embedding = model_udacity.encode(perfil.description, convert_to_tensor=True)
+    query_embedding = model_udacity.encode(perfil.description + query, convert_to_tensor=True)
     search_hits = util.semantic_search(query_embedding, corpus_embeddings_udacity, top_k=30)
     search_hits = search_hits[0]
     list_ids = []
@@ -98,9 +98,9 @@ def crear_lista_recomendaciones_udacity(perfil, contexto, k):
     list_recommendations = escoger_recomendaciones_udacity(list_ids, user_embedding, contexto, k)
     return list_recommendations
 
-def crear_lista_recomendaciones_coursera(perfil: PerfilUsuario, contexto, k):
+def crear_lista_recomendaciones_coursera(perfil, contexto, k, query = ""):
     # buscar cursos que por contenido puedan interesar al usuario
-    query_embedding = model_coursera.encode(perfil.description, convert_to_tensor=True)
+    query_embedding = model_coursera.encode(perfil.description + query, convert_to_tensor=True)
     search_hits = util.semantic_search(query_embedding, corpus_embeddings_coursera, top_k=100)
     search_hits = search_hits[0]
     list_ids = []

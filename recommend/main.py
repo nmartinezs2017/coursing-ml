@@ -29,17 +29,42 @@ def semantic_search_coursera(query: str, contexto: Optional[ContextoUsuario], k:
     return list_courses_coursera
 
 
-@app.post("/recommend_udacity/")
+@app.post("/recommend_courses_udacity/")
 def recommendation_udacity(perfil: PerfilUsuario, contexto: Optional[ContextoUsuario], k: Optional[int] = 10):
     list_recommendations = crear_lista_recomendaciones_udacity(perfil, contexto, k)
-    print("Aqui llegaa?")
-    print(list_recommendations)
     return {'list_recommendations': list_recommendations}
 
 
-@app.post("/recommend_coursera/")
+@app.post("/recommend_courses_coursera/")
 def recommendation_coursera(perfil: PerfilUsuario, contexto: Optional[ContextoUsuario], k: Optional[int] = 10):
     list_recommendations = crear_lista_recomendaciones_coursera(perfil, contexto, k)
+    return {'list_recommendations': list_recommendations}
+
+
+@app.post("/recommend_related_courses_udacity/")
+def recommendation_udacity(perfil: PerfilUsuario, id_course: int, contexto: Optional[ContextoUsuario], k: Optional[int] = 10):
+    curso_description = get_curso_udacity(id_course)["description"]
+    list_recommendations = crear_lista_recomendaciones_udacity(perfil, contexto, k, curso_description)
+    return {'list_recommendations': list_recommendations}
+
+
+@app.post("/recommend_related_courses_coursera/")
+def recommendation_coursera(perfil: PerfilUsuario, id_course: int, contexto: Optional[ContextoUsuario], k: Optional[int] = 10):
+    curso_description = get_curso_coursera(id_course)["description"]
+    print(curso_description)
+    list_recommendations = crear_lista_recomendaciones_coursera(perfil, contexto, k, curso_description)
+    return {'list_recommendations': list_recommendations}
+
+
+@app.post("/recommend_related_query_udacity/")
+def recommendation_udacity(perfil: PerfilUsuario, query:str, contexto: Optional[ContextoUsuario], k: Optional[int] = 10):
+    list_recommendations = crear_lista_recomendaciones_udacity(perfil, contexto, k, query)
+    return {'list_recommendations': list_recommendations}
+
+
+@app.post("/recommend_related_query_coursera/")
+def recommendation_coursera(perfil: PerfilUsuario, query:str, contexto: Optional[ContextoUsuario], k: Optional[int] = 10):
+    list_recommendations = crear_lista_recomendaciones_coursera(perfil, contexto, k, query)
     return {'list_recommendations': list_recommendations}
 
 

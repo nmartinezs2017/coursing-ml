@@ -262,12 +262,11 @@ def f_engineering_numerical_features_coursera(df: pd.DataFrame) -> pd.DataFrame:
     df['difficulty'].fillna("Beginner", inplace=True)
     df['difficulty'] = df['difficulty'].map({'beginner': 0, 'intermediate': 1, 'advanced': 2})
     print(df)
-    ## rating
-    user_dict = {'rating': [3.0, 4.1, 4.4, 4.5, 4.6, 4.7, 4.8, 4.9, np.Inf]}
-    transformer = ArbitraryDiscretiser(
-        binning_dict=user_dict, return_object=False, return_boundaries=False)
-    df['rating'] = transformer.fit_transform(df)
-    encoders_dict_coursera["coursera_rating_transformer"] = transformer
+    # rating - minmax scaling
+    from sklearn.preprocessing import MinMaxScaler
+    mms = MinMaxScaler().fit(df[['rating']])
+    df['rating'] = mms.transform(df[['rating']])
+    encoders_dict_udacity["coursera_rating_transformer"] = mms
     print(df)
     ## institution
     df['institution'].fillna("", inplace=True)
@@ -283,8 +282,6 @@ def f_engineering_numerical_features_coursera(df: pd.DataFrame) -> pd.DataFrame:
     print(pt.lambdas_)
     df[numerical_features] = pt.transform(df[numerical_features])
     encoders_dict_coursera["coursera_powertransformer"] = pt
-    print(df)
-
     output = open('encoders_coursera.pkl', 'wb')
     pickle.dump(encoders_dict_coursera, output)
     output.close()
