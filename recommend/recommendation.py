@@ -120,7 +120,6 @@ def crear_lista_recomendaciones_udacity(perfil):
 
     results = dict()
     for hit in search_hits:
-        # related_course = df_ud.iloc[hit['corpus_id']]
         results[str(hit['corpus_id'])] = float(hit['score'])
 
     row_user = convertir_datos_en_features_udacity(perfil)
@@ -139,7 +138,6 @@ def crear_lista_recomendaciones_coursera(perfil: PerfilUsuario):
 
     results = dict()
     for hit in search_hits:
-        # related_course = df_ud.iloc[hit['corpus_id']]
         results[str(hit['corpus_id'])] = float(hit['score'])
 
     row_user = convertir_datos_en_features_coursera(perfil)

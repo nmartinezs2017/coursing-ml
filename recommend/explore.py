@@ -1,7 +1,10 @@
 import math
 import os
 import sys
+from numpy import dot
+from numpy.linalg import norm
 import pandas as pd
+import numpy as np
 csfp = os.path.abspath(os.path.dirname(__file__))
 if csfp not in sys.path:
     sys.path.insert(0, csfp)
@@ -17,11 +20,30 @@ df_ud = context.catalog.load("cleaned_udacity")
 df_cou = context.catalog.load("cleaned_coursera")
 
 
-def calcular_contenido_similitud(perfil, curso):
-    usuario_embedding = model_udacity.encode(perfil, convert_to_tensor=True)
-    curso_embedding = model_udacity.encode(curso, convert_to_tensor=True)
-    cos_score = util.pytorch_cos_sim(usuario_embedding, curso_embedding)[0]
-    return cos_score
+def calcular_contenido_similitud_udacity(perfil, curso_id):
+    print(curso_id)
+    curso = df_cl_ud.iloc[curso_id]
+    usuario_embedding = convertir_datos_en_features_udacity(perfil)
+    rating = curso['rating']
+    if (np.isnan(rating)):
+        rating = 0
+    curso_embedding = [curso['difficulty'], curso['duration'], curso['n_reviews'], rating, curso['free']]
+    print(curso_embedding)
+    print(usuario_embedding)
+    cos_sim = dot(curso_embedding, usuario_embedding) / (norm(curso_embedding) * norm(usuario_embedding))
+    print(cos_sim)
+    return cos_sim
+
+
+def calcular_contenido_similitud_coursera(perfil, curso_id):
+    curso = df_cl_cou.iloc[curso_id]
+    usuario_embedding = convertir_datos_en_features_coursera(perfil)
+    rating = curso['rating']
+    if (np.isnan(rating)):
+        rating = 0
+    curso_embedding = [curso['difficulty'], curso['total_hours'], curso['enrolled'], rating, curso['institution']]
+    cos_sim = dot(curso_embedding, usuario_embedding) / (norm(curso_embedding) * norm(usuario_embedding))
+    return cos_sim
 
 
 def filtrar_cursos(cursos_candidatos, contexto):
@@ -40,19 +62,18 @@ def explore_courses_udacity(perfil, contexto, k):
     feature_usuario = convertir_datos_en_features_udacity(perfil)
     # buscar su cluster
     cluster_id = predecir_cluster_udacity(feature_usuario)
-    print(cluster_id)
     # crear lista
     list_id_courses = df_cl_ud[df_cl_ud['Label'] == cluster_id].index.tolist()
-    print(list_id_courses)
     cursos_candidatos = []
     for id_course in list_id_courses:
         curso = df_ud.iloc[int(id_course)]
-        print(curso)
         if (not pd.isnull(curso.description)):
-            cos_sim = calcular_contenido_similitud(perfil.description, curso.description)
+            cos_sim = calcular_contenido_similitud_udacity(perfil, id_course)
             cursos_candidatos.append((id_course, cos_sim))
     # filtrar
+    print(cursos_candidatos)
     cursos_filtrados = filtrar_cursos(cursos_candidatos, contexto)
+    print(cursos_candidatos)
     # ordenar
     cursos_filtrados.sort(key=lambda x: x[1])
     # devolver los k primeros
@@ -71,15 +92,13 @@ def explore_courses_coursera(perfil, contexto, k):
     feature_usuario = convertir_datos_en_features_coursera(perfil)
     # buscar su cluster
     cluster_id = predecir_cluster_coursera(feature_usuario)
-    print(cluster_id)
     # crear lista
     list_id_courses = df_cl_cou[df_cl_cou['Label'] == cluster_id].index.tolist()
-    print(list_id_courses)
     cursos_candidatos = []
     for id_course in list_id_courses:
         curso = df_cou.iloc[int(id_course)]
         if (not pd.isnull(curso.description)):
-            cos_sim = calcular_contenido_similitud(perfil.description, curso.description)
+            cos_sim = calcular_contenido_similitud_coursera(perfil, id_course)
             cursos_candidatos.append((id_course, cos_sim))
     # filtrar
     cursos_filtrados = filtrar_cursos(cursos_candidatos, contexto)

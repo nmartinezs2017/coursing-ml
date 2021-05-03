@@ -52,7 +52,6 @@ def convertir_datos_en_features_coursera(perfil: PerfilUsuario):
     numerical_features = ['difficulty', 'total_hours', 'enrolled', 'rating']
     df_user[numerical_features] = coursera_powertransformer.transform(df_user[numerical_features])
     df_user = coursera_inst_encoder.transform(df_user)
-    print(df_user)
     return df_user.iloc[0].to_numpy()
 
 
