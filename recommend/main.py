@@ -30,14 +30,16 @@ def semantic_search_coursera(query: str, contexto: Optional[ContextoUsuario], k:
 
 
 @app.post("/recommend_udacity/")
-def recommendation_udacity(perfil: PerfilUsuario):
-    list_recommendations = crear_lista_recomendaciones_udacity(perfil)
+def recommendation_udacity(perfil: PerfilUsuario, contexto: Optional[ContextoUsuario], k: Optional[int] = 10):
+    list_recommendations = crear_lista_recomendaciones_udacity(perfil, contexto, k)
+    print("Aqui llegaa?")
+    print(list_recommendations)
     return {'list_recommendations': list_recommendations}
 
 
 @app.post("/recommend_coursera/")
-def recommendation_coursera(perfil: PerfilUsuario):
-    list_recommendations = crear_lista_recomendaciones_coursera(perfil)
+def recommendation_coursera(perfil: PerfilUsuario, contexto: Optional[ContextoUsuario], k: Optional[int] = 10):
+    list_recommendations = crear_lista_recomendaciones_coursera(perfil, contexto, k)
     return {'list_recommendations': list_recommendations}
 
 

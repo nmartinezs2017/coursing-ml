@@ -27,125 +27,89 @@ df_cl_ud = context.catalog.load("clustering_output_udacity")
 df_cl_cou = context.catalog.load("clustering_output_coursera")
 
 
-def escoger_recomendaciones_udacity(candidatos, cluster_id, vector_usuario):
+def escoger_recomendaciones_udacity(candidatos_ids, vector_usuario, contexto, k):
     resultados = dict()
     indice = 0
-    for (candidato_id, score_candidato) in candidatos.items():
-        related_course = df_ud.iloc[int(candidato_id)]
-        related_course_features = df_cl_ud.iloc[int(candidato_id)]
-        c_id_candidato = related_course_features['Label']
-        if (c_id_candidato == cluster_id):
-            resultados[indice] = {'course_id': candidato_id, 'title': related_course['title'], 'url': related_course['url']}
-            indice = indice + 1
 
-    candidatos_filtrados = []
-    for (candidato_id, score_candidato) in candidatos.items():
-        # related_course = df_ud.iloc[int(candidato_id)]
+    cursos_ordenados = []
+    for candidato_id in candidatos_ids:
         related_course_features = df_cl_ud.iloc[int(candidato_id)]
-        c_id_candidato = related_course_features['Label']
-        if (c_id_candidato != cluster_id):
-            rating = related_course_features['rating']
-            if (np.isnan(rating)):
-                rating = 0
-            vector_candidato = [related_course_features['difficulty'], related_course_features['duration'], related_course_features['n_reviews'], rating, related_course_features['free']]
-            cos_sim = dot(vector_candidato, vector_usuario)/(norm(vector_candidato)*norm(vector_usuario))
-            candidatos_filtrados.append((candidato_id, cos_sim))
+        rating = related_course_features['rating']
+        if (np.isnan(rating)):
+            rating = 0
+        vector_candidato = [related_course_features['difficulty'], related_course_features['duration'], related_course_features['n_reviews'], rating, related_course_features['free']]
+        cos_sim = dot(vector_candidato, vector_usuario)/(norm(vector_candidato)*norm(vector_usuario))
+        cursos_ordenados.append((candidato_id, cos_sim))
 
-    candidatos_filtrados.sort(key=lambda x: x[1])
-    candidatos_filtrados = candidatos_filtrados[::-1]
+    cursos_ordenados.sort(key=lambda x: x[1])
+    cursos_ordenados = cursos_ordenados[::-1]
+    candidatos_filtrados = filtrar_cursos(cursos_ordenados, contexto)
     c_f_indice = 0
-    while(indice < 10) and (c_f_indice < len(candidatos_filtrados)):
+    while(indice < k) and (c_f_indice < len(candidatos_filtrados)):
         c_f_id = candidatos_filtrados[c_f_indice][0]
         related_course = df_ud.iloc[int(c_f_id)]
-        resultados[indice] = {'course_id': candidatos_filtrados[c_f_indice][0], 'title': related_course['title'], 'url': related_course['url']}
+        resultados[str(indice)] = {'course_id': str(candidatos_filtrados[c_f_indice][0]), 'title': related_course['title'], 'url': related_course['url']}
         c_f_indice = c_f_indice + 1
         indice = indice + 1
 
     return resultados
 
 
-def escoger_recomendaciones_coursera(candidatos, cluster_id, vector_usuario):
+def escoger_recomendaciones_coursera(candidatos_ids, vector_usuario, contexto, k):
     resultados = dict()
     indice = 0
-    temp_list = []
-    print(cluster_id)
-    for key, value in candidatos.items():
-        temp = [key, value]
-        temp_list.append(temp)
 
-    temp_list.sort(key=lambda x: x[1])
-    temp_list = temp_list[::-1]
-
-    for (candidato_id, score_candidato) in temp_list:
-        related_course = df_cou.iloc[int(candidato_id)]
-        related_course_features = df_cl_cou.iloc[int(candidato_id)]
-        c_id_candidato = related_course_features['Label']
-        if (c_id_candidato == cluster_id):
-            resultados[indice] = {'course_id': candidato_id, 'title': related_course['title'], 'url': related_course['url']}
-            indice = indice + 1
-            if (indice==10):
-                print("Ha llegado al limite")
-                break
-
-    candidatos_filtrados = []
-    for (candidato_id, score_candidato) in candidatos.items():
+    cursos_ordenados = []
+    for candidato_id in candidatos_ids:
         # related_course = df_ud.iloc[int(candidato_id)]
         related_course_features = df_cl_cou.iloc[int(candidato_id)]
-        c_id_candidato = related_course_features['Label']
-        if (c_id_candidato != cluster_id):
-            rating = related_course_features['rating']
-            if (np.isnan(rating)):
-                rating = 0
-            vector_candidato = [related_course_features['difficulty'], related_course_features['total_hours'], related_course_features['enrolled'], rating, related_course_features['institution']]
-            cos_sim = dot(vector_candidato, vector_usuario)/(norm(vector_candidato)*norm(vector_usuario))
-            candidatos_filtrados.append((candidato_id, cos_sim))
+        rating = related_course_features['rating']
+        if (np.isnan(rating)):
+            rating = 0
+        vector_candidato = [related_course_features['difficulty'], related_course_features['total_hours'], related_course_features['enrolled'], rating, related_course_features['institution']]
+        cos_sim = dot(vector_candidato, vector_usuario)/(norm(vector_candidato)*norm(vector_usuario))
+        cursos_ordenados.append((candidato_id, cos_sim))
 
-    candidatos_filtrados.sort(key=lambda x: x[1])
-    candidatos_filtrados = candidatos_filtrados[::-1]
+    cursos_ordenados.sort(key=lambda x: x[1])
+    cursos_ordenados = cursos_ordenados[::-1]
+    candidatos_filtrados = filtrar_cursos(cursos_ordenados, contexto)
     c_f_indice = 0
-    while(indice < 10) and (c_f_indice < len(candidatos_filtrados)):
+    while(indice < k) and (c_f_indice < len(candidatos_filtrados)):
         c_f_id = candidatos_filtrados[c_f_indice][0]
         related_course = df_cou.iloc[int(c_f_id)]
-        resultados[indice] = {'course_id': candidatos_filtrados[c_f_indice][0], 'title': related_course['title'], 'url': related_course['url']}
+        resultados[str(indice)] = {'course_id': str(candidatos_filtrados[c_f_indice][0]), 'title': related_course['title'], 'url': related_course['url']}
         c_f_indice = c_f_indice + 1
         indice = indice + 1
 
     return resultados
 
-def crear_lista_recomendaciones_udacity(perfil):
+def crear_lista_recomendaciones_udacity(perfil, contexto, k):
+    # buscar cursos que por contenido puedan interesar al usuario
     query_embedding = model_udacity.encode(perfil.description, convert_to_tensor=True)
-
     search_hits = util.semantic_search(query_embedding, corpus_embeddings_udacity, top_k=30)
     search_hits = search_hits[0]
-
-    results = dict()
+    list_ids = []
     for hit in search_hits:
-        results[str(hit['corpus_id'])] = float(hit['score'])
+        list_ids.append(hit['corpus_id'])
 
-    row_user = convertir_datos_en_features_udacity(perfil)
-    df_user = pd.DataFrame([row_user], columns=["difficulty", "duration", "n_reviews", "rating", "free"])
-
-    labels = clustering_model_udacity.predict(df_user)
-    cluster_id = labels[0]
-    list_recommendations = escoger_recomendaciones_udacity(results, cluster_id, row_user)
+    # predecir el cluster del user a partir de sus características
+    user_embedding = convertir_datos_en_features_udacity(perfil)
+  #  df_user = pd.DataFrame([user_embedding], columns=["difficulty", "duration", "n_reviews", "rating", "free"])
+    list_recommendations = escoger_recomendaciones_udacity(list_ids, user_embedding, contexto, k)
     return list_recommendations
 
-def crear_lista_recomendaciones_coursera(perfil: PerfilUsuario):
+def crear_lista_recomendaciones_coursera(perfil: PerfilUsuario, contexto, k):
+    # buscar cursos que por contenido puedan interesar al usuario
     query_embedding = model_coursera.encode(perfil.description, convert_to_tensor=True)
-
     search_hits = util.semantic_search(query_embedding, corpus_embeddings_coursera, top_k=100)
     search_hits = search_hits[0]
-
-    results = dict()
+    list_ids = []
     for hit in search_hits:
-        results[str(hit['corpus_id'])] = float(hit['score'])
+        list_ids.append(hit['corpus_id'])
 
-    row_user = convertir_datos_en_features_coursera(perfil)
-    df_user = pd.DataFrame([row_user], columns=["difficulty", "total_hours", "enrolled", "rating", "institution"])
-
-    labels, _ = hdbscan.approximate_predict(clustering_model_coursera, df_user)
-    cluster_id = labels[0]
-    list_recommendations = escoger_recomendaciones_coursera(results, cluster_id, row_user)
+    # predecir el cluster del user a partir de sus características
+    user_embedding = convertir_datos_en_features_coursera(perfil)
+    list_recommendations = escoger_recomendaciones_coursera(list_ids, user_embedding, contexto, k)
     return list_recommendations
 
 
