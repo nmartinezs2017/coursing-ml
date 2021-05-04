@@ -41,13 +41,13 @@ def create_pipeline(**kwargs):
         [
             node(
                 clustering_udacity,
-                "numerical_features_udacity",
-                ["clustering_output_udacity", "clustering_model_udacity"],
+                ["numerical_features_udacity", "numerical_data_udacity"],
+                ["clustering_output_udacity", "data_labeled_udacity", "clustering_model_udacity"],
             ),
             node(
                 clustering_coursera,
-                "numerical_features_coursera",
-                ["clustering_output_coursera", "clustering_model_coursera"],
+                ["numerical_features_coursera", "numerical_data_coursera"],
+                ["clustering_output_coursera", "data_labeled_coursera", "clustering_model_coursera"],
             ),
             node(
                 generate_embeddings_udacity,

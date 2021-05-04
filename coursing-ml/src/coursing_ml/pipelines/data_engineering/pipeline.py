@@ -16,8 +16,8 @@ def create_pipeline(**kwargs):
             node(
                 lambda x: x,
                 inputs="preprocessed_udacity",
-                outputs="data_exp_report",
-                name="data_exploration_report",
+                outputs="pre_report_udacity",
+                name="report_udacity",
             ),
             node(
                 func=feature_cleaning_udacity,
@@ -48,6 +48,12 @@ def create_pipeline(**kwargs):
                 inputs="coursera_scrapped",
                 outputs="preprocessed_coursera",
                 name="preprocessing_coursera",
+            ),
+            node(
+                lambda x: x,
+                inputs="preprocessed_coursera",
+                outputs="pre_report_coursera",
+                name="report_coursera",
             ),
             node(
                 func=feature_cleaning_coursera,

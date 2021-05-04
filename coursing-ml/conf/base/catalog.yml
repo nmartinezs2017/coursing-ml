@@ -209,6 +209,36 @@ clustering_output_coursera:
   type: pandas.CSVDataSet
   filepath: data/07_model_output/clustering_output_coursera.csv
 
+data_labeled_udacity:
+  type: pandas.CSVDataSet
+  filepath: data/07_model_output/data_labeled_udacity.csv
+  fs_args:
+    open_args_load:
+      mode: "rb"
+      encoding: "utf-8"
+    open_args_save:
+      index: False
+      mode: "wb"
+      encoding: "utf-8"
+  save_args:
+    index: False
+    encoding: "utf-8"
+
+data_labeled_coursera:
+  type: pandas.CSVDataSet
+  filepath: data/07_model_output/data_labeled_coursera.csv
+  fs_args:
+    open_args_load:
+      mode: "rb"
+      encoding: "utf-8"
+    open_args_save:
+      index: False
+      mode: "wb"
+      encoding: "utf-8"
+  save_args:
+    index: False
+    encoding: "utf-8"
+
 corpus_embeddings_udacity:
   type: pickle.PickleDataSet
   filepath: data/07_model_output/corpus_embeddings_udacity.pkl
@@ -225,6 +255,10 @@ nlp_model_coursera:
   type: pickle.PickleDataSet
   filepath: data/06_models/nlp_model_coursera.pkl
 
-data_exp_report:
+pre_report_udacity:
   type: coursing_ml.io.ProfileReportDataSet
-  filepath: data/08_reporting/report.html
+  filepath: data/08_reporting/report_udacity.html
+
+pre_report_coursera:
+  type: coursing_ml.io.ProfileReportDataSet
+  filepath: data/08_reporting/report_coursera.html

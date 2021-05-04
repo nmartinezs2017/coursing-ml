@@ -44,24 +44,24 @@ from sklearn.cluster import KMeans
 from sentence_transformers import SentenceTransformer, util
 from sklearn.cluster import DBSCAN
 
-def clustering_udacity(df: pd.DataFrame) -> pd.DataFrame:
-    # borrar columnas innecesarias
+def clustering_udacity(df: pd.DataFrame, data: pd.DataFrame) -> pd.DataFrame:
     km7 = KMeans(n_clusters=7).fit(df)
     df['Label'] = km7.labels_
+    data['Label'] = km7.labels_
+    return [df, data, km7]
 
-    return [df, km7]
-
-def clustering_coursera(df: pd.DataFrame) -> pd.DataFrame:
+def clustering_coursera(df: pd.DataFrame, data: pd.DataFrame) -> pd.DataFrame:
     # set up the imputer
     arbitrary_imputer = ArbitraryNumberImputer(arbitrary_number=0)
     # fit the imputer
     arbitrary_imputer.fit(df)
     # transform the data
     df = arbitrary_imputer.transform(df)
-    clusterer = hdbscan.HDBSCAN(min_cluster_size=50, prediction_data=True)
+    clusterer = hdbscan.HDBSCAN(min_samples=10, min_cluster_size=100, prediction_data=True)
     cluster_labels = clusterer.fit_predict(df)
     df['Label'] = cluster_labels
-    return [df, clusterer]
+    data['Label'] = cluster_labels
+    return [df, data, clusterer]
 
 def generate_embeddings_udacity(df: pd.DataFrame) -> pd.DataFrame:
     df['description'] = df.description.replace(np.nan, '', regex=True)

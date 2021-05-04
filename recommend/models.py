@@ -6,10 +6,10 @@ class ContextoUsuario(BaseModel):
     lista_idiomas: List[str] = []
 
 class PerfilUsuario(BaseModel):
-    description: str
+    description: str = " "
     difficulty: str = 'beginner'
-    duration: int = 10
+    duration: int = 20
     free: int = 1
-    n_reviews: int = 100
-    rating: float = 4.7
-    institution: str = ""
+    n_reviews: int = 20000
+    rating: float = 4.5
+    institution: str = "Coursera"
