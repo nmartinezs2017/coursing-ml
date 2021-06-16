@@ -7,24 +7,6 @@
 
 import scrapy
 
-
-class UdacityItem(scrapy.Item):
-    id_course = scrapy.Field()
-    title = scrapy.Field()
-    school = scrapy.Field() # -> Categoría
-    rating = scrapy.Field()
-    n_reviews = scrapy.Field()
-    url = scrapy.Field()
-    duration_hours = scrapy.Field()
-    difficulty = scrapy.Field()
-    description = scrapy.Field()
-    free = scrapy.Field()
-    skills = scrapy.Field()
-    collaboration = scrapy.Field()
-    duration_weeks = scrapy.Field()
-    # idioma
-
-
 class CourseraItem(scrapy.Item):
     id_course = scrapy.Field()
     title = scrapy.Field()

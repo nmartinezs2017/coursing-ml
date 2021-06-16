@@ -9,6 +9,7 @@ from selenium.webdriver.chrome.options import Options
 from selenium import webdriver
 
 # scrapy crawl coursera -o "coursera_scrapped.csv"
+
 def set_chrome_options():
     """Sets chrome options for Selenium.
     Chrome options for headless browser is enabled.
@@ -36,11 +37,11 @@ class CourseraSpider(scrapy.Spider):
             absolute_next_page_url = absolute_page + section
             yield response.follow(absolute_next_page_url, self.parse_directory)
 
-        for page in range(2, 180, 1):
+        for page in range(2, 180, 1): # 180 is the number of pages in this directory
             url = 'https://www.coursera.org/directory/courses?page=' + str(page)
             yield response.follow(url, self.parse_directory)
 
-        for page in range(2, 18, 1):
+        for page in range(2, 18, 1): # 18 is the number of pages in this directory
             url = 'https://www.coursera.org/directory/specializations?page=' + str(page)
             yield response.follow(url, self.parse_directory)
 
@@ -55,33 +56,33 @@ class CourseraSpider(scrapy.Spider):
         # initialization
         l = ItemLoader(item=CourseraItem(), response=response)
         self.driver.get(response.url)
-        sleep(2)
         sel = Selector(text=self.driver.page_source)
         duration = None
         language = None
         difficulty = None
-        # url
+        # extract url
         url = response.url
-        # section
+        # extract section
         section = url.split("/")[3]
-        # category
+        # extract category
         category = sel.xpath('//*[@class="_1ruggxy"]/a/text()').extract()
-        # number of students enrolled
+        # extract number of students enrolled
         enrolled = sel.xpath('.//strong/span/text()').extract_first()
-        # title
+        # extract title
         title = sel.xpath('.//h1/text()').extract_first()
-        # RATING
+        # extract rating
         rating = sel.xpath('//*[@data-test="number-star-rating"]/text()').extract_first()
         n_ratings = sel.xpath('//*[@class="_wmgtrl9 m-r-1s color-white"]/span/text()').extract_first()
+        # extract views
         views = sel.xpath('//*[@class="_bd90rg"]/*//span/text()').extract_first()
         n_ratings_spe = sel.xpath('//*[@class="_wmgtrl9 color-white ratings-count-expertise-style"]/span/text()').extract_first()
-        # skills
+        # extract skills
         skills = sel.xpath('//*[@class="_t6niqc3"]/span/@title').extract()
-        # description
+        # extract description
         description_spe = sel.xpath('//*[@class="description"]/*//p/text()').extract()
         description_cou = sel.xpath('//*[@class="m-t-1 description"]/*//p/text()').extract()
         description_pro = sel.xpath('//*[@class="_g61i7y"]/text()').extract()
-        # CHARACTERISTICS
+        # extract CHARACTERISTICS
         # characteristics_cou = sel.xpath('//*[@class="_g61i7y"]/text()').extract()
         # spetialization
         characteristics_spe = sel.xpath('//*[@class="_16ni8zai m-b-0"]/text()').extract()
@@ -90,7 +91,7 @@ class CourseraSpider(scrapy.Spider):
             difficulty = characteristics_spe[3]
             duration = sel.xpath('//*[@class="_16ni8zai m-b-0"]/span/text()').extract_first()
             language = characteristics_spe[-1]
-        # courses
+        #  courses
         if section == 'learn':
             difficulty = sel.xpath('//*[@class="_16ni8zai m-b-0 m-t-1s"]/text()').extract_first()
             if difficulty is None:
@@ -98,7 +99,7 @@ class CourseraSpider(scrapy.Spider):
             duration = sel.xpath('//*[@class="_16ni8zai m-b-0 m-t-1s"]/span/text()').extract_first()
         # LANGUAGE
         # language_cou = sel.xpath('//*[@class="_16ni8zai m-b-0 m-t-1s"]/text()').extract()
-        # COLLABORATION
+        # extract COLLABORATION
         # professional-certificates
         instructor = sel.xpath('//*[@class="_1qfi0x77"]/span/text()').extract_first()
         if instructor is None:
@@ -117,7 +118,8 @@ class CourseraSpider(scrapy.Spider):
             language = sel.xpath('//*[@class="_1rcyblj"]/text()').extract()[3]
             instructor = sel.xpath('//*[@class="instructor-name headline-3-text bold"]/text()').extract_first()
             institution = "Coursera"
-        # add values
+
+        # save items
         l.add_value('id_course', url.split("/")[4])
         l.add_value('title', title)
         l.add_value('difficulty', difficulty)
