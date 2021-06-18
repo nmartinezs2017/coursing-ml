@@ -143,6 +143,7 @@ corpus_embeddings_udacity.pkl
 corpus_embeddings_coursera.pkl
 nlp_model_coursera.pkl
 nlp_model_udacity.pkl
+udemy_scrapped.csv
 
 # SageMath parsed files
 *.sage.py
