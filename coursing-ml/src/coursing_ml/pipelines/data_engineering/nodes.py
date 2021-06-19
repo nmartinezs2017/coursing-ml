@@ -56,14 +56,17 @@ def process_difficulty_coursera(x):
 
 def process_text(x):
     x = str(x)
-    x = x.replace("\n", " ")
+    x = x.replace("\n", "")
+    x = x.replace("\r", "")
+    x = x.replace(",", "")
+    x = x.replace("\xa0", " ")
     return re.sub(",([\w]+)", r"\1", x)
 
 
-def extract_n_element(x, n):
+def extract_n_element(x, n, separator=" "):
     x = str(x)
-    if len(str(x).split(',')) > 1:
-        return str(x).split(',')[n]
+    if len(str(x).split(separator)) > 1:
+        return str(x).split(separator)[n]
     else:
         return 0
 
@@ -119,11 +122,32 @@ def map_boolean_to_int(df, field) -> pd.DataFrame:
     return df
 
 
+def extract_hours_udemy(x):
+    x = str(x)
+    if len(str(x).split(' ')) > 1:
+        x = str(x).split(' ')[0]
+        x = x.replace("h", "")
+        return float(x)
+    else:
+        x = x.replace("m", "")
+        x = float(x)
+        x = x / 60
+        return x
+
+
+def process_cost(x):
+    x = str(x)
+    if x.lower() == 'free':
+        return 0.0
+    else:
+        return float(x)
+
+
 def preprocess_udacity(df: pd.DataFrame) -> pd.DataFrame:
     df['language'] = 'English'
-    df['n_reviews'] = df['n_reviews'].apply(extract_n_element, n=0)
+    df['n_reviews'] = df['n_reviews'].apply(extract_n_element, n=0, separator=',')
     df['free'] = df['free'].str.strip('[]')
-    df['rating'] = df['rating'].apply(extract_n_element, n=0)
+    df['rating'] = df['rating'].apply(extract_n_element, n=0, separator=',')
     df['rating'] = df['rating'].str.strip(' width:')
     df['rating'] = df['rating'].str.strip('%')
     df['rating'] = pd.to_numeric(df['rating'])
@@ -138,7 +162,7 @@ def preprocess_udacity(df: pd.DataFrame) -> pd.DataFrame:
 
 def preprocess_coursera(df: pd.DataFrame) -> pd.DataFrame:
     del df['characteristics']
-    df['subcategory'] = df['category'].apply(extract_n_element, n=2)
+    df['subcategory'] = df['category'].apply(extract_n_element, n=2, separator=",")
     df['description'] = df['description'].apply(process_text)
     df['title'] = df['title'].apply(process_text)
     df['difficulty'] = df['difficulty'].apply(process_difficulty_coursera)
@@ -151,6 +175,25 @@ def preprocess_coursera(df: pd.DataFrame) -> pd.DataFrame:
     df['aux'] = values
     df['total_hours'] = values.where(df.aux != 0, other=df['hours_months'])
     del df['aux']
+    return df
+
+
+def preprocess_udemy(df: pd.DataFrame) -> pd.DataFrame:
+    del df['characteristics']
+    del df['id_course']
+    df['free'] = df['free'].str.strip('[]')
+    df = map_boolean_to_int(df, 'free')
+    df['cost'] = df['cost'].str.strip('€')
+    df['cost'] = df['cost'].apply(process_cost)
+    df['description'] = df['description'].apply(process_text)
+    df['description_extend'] = df['description_extend'].apply(process_text)
+    df['language'] = df['language'].apply(process_text)
+    df['language'] = df['language'].str.strip(' ')
+    df['n_students'] = df['n_students'].apply(process_text)
+    df['n_students'] = df['n_students'].apply(extract_n_element, n=0, separator=" ")
+    df['duration'] = df['duration'].apply(process_text)
+    df['hours'] = df['duration'].apply(extract_hours_udemy)
+    del df['duration']
     return df
 
 
@@ -257,17 +300,14 @@ def f_engineering_categorical_features_coursera(df: pd.DataFrame) -> pd.DataFram
     return df
 
 def f_engineering_numerical_features_coursera(df: pd.DataFrame) -> pd.DataFrame:
-    print(df)
     ## difficulty
     df['difficulty'].fillna("Beginner", inplace=True)
     df['difficulty'] = df['difficulty'].map({'beginner': 0, 'intermediate': 1, 'advanced': 2})
-    print(df)
     # rating - minmax scaling
     from sklearn.preprocessing import MinMaxScaler
     mms = MinMaxScaler().fit(df[['rating']])
     df['rating'] = mms.transform(df[['rating']])
     encoders_dict_udacity["coursera_rating_transformer"] = mms
-    print(df)
     ## institution
     df['institution'].fillna("", inplace=True)
     encoder_ins = CountFrequencyEncoder(encoding_method='frequency',
@@ -279,7 +319,6 @@ def f_engineering_numerical_features_coursera(df: pd.DataFrame) -> pd.DataFrame:
     numerical_features = ['difficulty', 'total_hours', 'enrolled', 'rating']
     pt = PowerTransformer()
     pt.fit(df[numerical_features])
-    print(pt.lambdas_)
     df[numerical_features] = pt.transform(df[numerical_features])
     encoders_dict_coursera["coursera_powertransformer"] = pt
     output = open('encoders_coursera.pkl', 'wb')

@@ -79,5 +79,11 @@ def create_pipeline(**kwargs):
                 outputs="numerical_features_coursera",
                 name="numerical_features_coursera",
             ),
+            node(
+                func=preprocess_udemy,
+                inputs="udemy_scrapped",
+                outputs="preprocessed_udemy",
+                name="preprocessing_udemy",
+            ),
         ]
     )

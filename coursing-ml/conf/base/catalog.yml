@@ -60,9 +60,9 @@ coursera_scrapped:
       mode: "rb"
       encoding: "utf-8"
 
-coursera_raw:
+udemy_scrapped:
   type: pandas.CSVDataSet
-  filepath: data/01_raw/coursera_raw.csv
+  filepath: data/01_raw/udemy_scrapped.csv
   fs_args:
     open_args_load:
       mode: "rb"
@@ -86,6 +86,23 @@ preprocessed_coursera:
   save_args:
     index: False
     encoding: "utf-8"
+
+
+preprocessed_udemy:
+  type: pandas.CSVDataSet
+  filepath: data/03_primary/preprocessed_udemy.csv
+  fs_args:
+    open_args_load:
+      mode: "rb"
+      encoding: "utf-8"
+    open_args_save:
+      index: False
+      mode: "wb"
+      encoding: "utf-8"
+  save_args:
+    index: False
+    encoding: "utf-8"
+
 
 cleaned_udacity:
   type: pandas.CSVDataSet
