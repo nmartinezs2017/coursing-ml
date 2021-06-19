@@ -214,6 +214,7 @@ def feature_cleaning_udacity(df: pd.DataFrame) -> pd.DataFrame:
     df["title"].fillna("", inplace=True)
     return df
 
+
 def feature_cleaning_coursera(df: pd.DataFrame) -> pd.DataFrame:
     from feature_engine.imputation import DropMissingData
     from feature_engine.imputation import CategoricalImputer
@@ -248,6 +249,27 @@ def feature_cleaning_coursera(df: pd.DataFrame) -> pd.DataFrame:
     df = missingdata_imputer.transform(df)
     return df
 
+
+def feature_cleaning_udemy(df: pd.DataFrame) -> pd.DataFrame:
+    from feature_engine.imputation import DropMissingData
+    missingdata_imputer = DropMissingData(variables=['description_extend'])
+    missingdata_imputer.fit(df)
+    df = missingdata_imputer.transform(df)
+    missingdata_imputer = DropMissingData(variables=['description'])
+    missingdata_imputer.fit(df)
+    df = missingdata_imputer.transform(df)
+    missingdata_imputer = DropMissingData(variables=['category'])
+    missingdata_imputer.fit(df)
+    df = missingdata_imputer.transform(df)
+    missingdata_imputer = DropMissingData(variables=['n_students'])
+    missingdata_imputer.fit(df)
+    df = missingdata_imputer.transform(df)
+    missingdata_imputer = DropMissingData(variables=['rating'])
+    missingdata_imputer.fit(df)
+    df = missingdata_imputer.transform(df)
+    return df
+
+
 def feature_selection_udacity(df: pd.DataFrame) -> pd.DataFrame:
     # coger las categorical features que interesan
     categorical_features = ['title', 'description']
@@ -257,6 +279,7 @@ def feature_selection_udacity(df: pd.DataFrame) -> pd.DataFrame:
     numerical_features = ['difficulty', 'duration', 'n_reviews', 'rating', 'free']
     df_numerical = df[numerical_features]
     return [df_categorical, df_numerical]
+
 
 def feature_selection_coursera(df: pd.DataFrame) -> pd.DataFrame:
     # coger las categorical features que interesan

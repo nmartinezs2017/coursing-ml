@@ -85,5 +85,11 @@ def create_pipeline(**kwargs):
                 outputs="preprocessed_udemy",
                 name="preprocessing_udemy",
             ),
+            node(
+                func=feature_cleaning_udemy,
+                inputs="preprocessed_udemy",
+                outputs="cleaned_udemy",
+                name="feature_cleaning_udemy",
+            ),
         ]
     )

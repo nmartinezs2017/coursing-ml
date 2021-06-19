@@ -123,6 +123,23 @@ cleaned_coursera:
     index: False
     encoding: "utf-8"
 
+
+cleaned_udemy:
+  type: pandas.CSVDataSet
+  filepath: data/03_primary/cleaned_udemy.csv
+  fs_args:
+    open_args_load:
+      mode: "rb"
+      encoding: "utf-8"
+    open_args_save:
+      index: False
+      mode: "wb"
+      encoding: "utf-8"
+  save_args:
+    index: False
+    encoding: "utf-8"
+
+
 categorical_data_udacity:
   type: pandas.CSVDataSet
   filepath: data/03_primary/categorical_data_udacity.csv
