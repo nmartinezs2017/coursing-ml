@@ -2,16 +2,13 @@ import pickle
 
 import pandas as pd
 import re
-import numpy as np
-import string
 from sklearn.preprocessing import QuantileTransformer
 from feature_engine.encoding import CountFrequencyEncoder
-from feature_engine.encoding import OneHotEncoder
-from feature_engine.discretisation import ArbitraryDiscretiser
 from sklearn.preprocessing import PowerTransformer
 
 encoders_dict_coursera = dict()
 encoders_dict_udacity = dict()
+encoders_dict_udemy = dict()
 
 def extract_time_range(x):
     x = x.rstrip()
@@ -267,10 +264,13 @@ def feature_cleaning_udemy(df: pd.DataFrame) -> pd.DataFrame:
     missingdata_imputer = DropMissingData(variables=['rating'])
     missingdata_imputer.fit(df)
     df = missingdata_imputer.transform(df)
+    missingdata_imputer = DropMissingData(variables=['hours'])
+    missingdata_imputer.fit(df)
+    df = missingdata_imputer.transform(df)
     return df
 
 
-def feature_selection_udacity(df: pd.DataFrame) -> pd.DataFrame:
+def feature_selection_udacity(df: pd.DataFrame):
     # coger las categorical features que interesan
     categorical_features = ['title', 'description']
     df_categorical = df[categorical_features]
@@ -281,7 +281,7 @@ def feature_selection_udacity(df: pd.DataFrame) -> pd.DataFrame:
     return [df_categorical, df_numerical]
 
 
-def feature_selection_coursera(df: pd.DataFrame) -> pd.DataFrame:
+def feature_selection_coursera(df: pd.DataFrame):
     # coger las categorical features que interesan
     categorical_features = ['title', 'description']
     df_categorical = df[categorical_features]
@@ -292,8 +292,22 @@ def feature_selection_coursera(df: pd.DataFrame) -> pd.DataFrame:
 
     return [df_categorical, df_numerical]
 
+
+def feature_selection_udemy(df: pd.DataFrame):
+    # coger las categorical features que interesan
+    categorical_features = ['title', 'description', 'description_extend']
+    df_categorical = df[categorical_features]
+
+    # coger las numerical features que interesan
+    numerical_features = ['cost', 'n_students', 'rating', 'hours']
+    df_numerical = df[numerical_features]
+
+    return [df_categorical, df_numerical]
+
+
 def f_engineering_categorical_features_udacity(df: pd.DataFrame) -> pd.DataFrame:
     return df
+
 
 def f_engineering_numerical_features_udacity(df: pd.DataFrame) -> pd.DataFrame:
     # duration - normalization
@@ -313,7 +327,7 @@ def f_engineering_numerical_features_udacity(df: pd.DataFrame) -> pd.DataFrame:
     qt = QuantileTransformer(random_state=0)
     qt.fit(X)
     df['n_reviews'] = qt.transform(X)
-    output = open('encoders_udacity.pkl', 'wb')
+    output = open('data/encoders/encoders_udacity.pkl', 'wb')
     pickle.dump(encoders_dict_udacity, output)
     output.close()
     return df
@@ -330,7 +344,7 @@ def f_engineering_numerical_features_coursera(df: pd.DataFrame) -> pd.DataFrame:
     from sklearn.preprocessing import MinMaxScaler
     mms = MinMaxScaler().fit(df[['rating']])
     df['rating'] = mms.transform(df[['rating']])
-    encoders_dict_udacity["coursera_rating_transformer"] = mms
+    encoders_dict_coursera["coursera_rating_transformer"] = mms
     ## institution
     df['institution'].fillna("", inplace=True)
     encoder_ins = CountFrequencyEncoder(encoding_method='frequency',
@@ -344,7 +358,21 @@ def f_engineering_numerical_features_coursera(df: pd.DataFrame) -> pd.DataFrame:
     pt.fit(df[numerical_features])
     df[numerical_features] = pt.transform(df[numerical_features])
     encoders_dict_coursera["coursera_powertransformer"] = pt
-    output = open('encoders_coursera.pkl', 'wb')
+    output = open('data/encoders/encoders_coursera.pkl', 'wb')
     pickle.dump(encoders_dict_coursera, output)
+    output.close()
+    return df
+
+def f_engineering_categorical_features_udemy(df: pd.DataFrame) -> pd.DataFrame:
+    return df
+
+def f_engineering_numerical_features_udemy(df: pd.DataFrame) -> pd.DataFrame:
+    numerical_features = ['cost', 'n_students', 'rating', 'hours']
+    pt = PowerTransformer()
+    pt.fit(df[numerical_features])
+    df[numerical_features] = pt.transform(df[numerical_features])
+    encoders_dict_udemy["udemy_powertransformer"] = pt
+    output = open('data/encoders/encoders_udemy.pkl', 'wb')
+    pickle.dump(encoders_dict_udemy, output)
     output.close()
     return df

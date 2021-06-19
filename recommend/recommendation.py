@@ -116,3 +116,4 @@ def crear_lista_recomendaciones_coursera(perfil, contexto, k, query = ""):
 ##### inicialización #####
 ss, mms = importar_encoders_udacity()
 coursera_inst_imputer, coursera_rating_transformer, coursera_inst_encoder, coursera_powertransformer = importar_encoders_coursera()
+udemy_powertransformer = importar_encoders_udemy()

@@ -12,10 +12,19 @@ from sentence_transformers import util
 context = load_context('../coursing-ml/')
 model_udacity = context.catalog.load("nlp_model_udacity")
 model_coursera = context.catalog.load("nlp_model_coursera")
-df_cl_ud = context.catalog.load("clustering_output_udacity")
-df_cl_cou = context.catalog.load("clustering_output_coursera")
+model_udemy = context.catalog.load("nlp_model_udemy")
+
+clustering_model_udacity = context.catalog.load("clustering_model_udacity")
+clustering_model_coursera = context.catalog.load("clustering_model_coursera")
+clustering_model_udemy = context.catalog.load("clustering_model_udemy")
+
 df_ud = context.catalog.load("cleaned_udacity")
 df_cou = context.catalog.load("cleaned_coursera")
+df_ude = context.catalog.load("cleaned_udemy")
+
+df_cl_ud = context.catalog.load("clustering_output_udacity")
+df_cl_cou = context.catalog.load("clustering_output_coursera")
+df_cl_ude = context.catalog.load("clustering_output_udemy")
 
 
 def explore_courses_udacity(perfil, contexto, k):
@@ -46,6 +55,7 @@ def explore_courses_udacity(perfil, contexto, k):
 
     return resultados
 
+
 def explore_courses_coursera(perfil, contexto, k):
     # crear feature usuario udacity
     feature_usuario = convertir_datos_en_features_coursera(perfil)
@@ -60,7 +70,7 @@ def explore_courses_coursera(perfil, contexto, k):
             cos_sim = calcular_similitud_contenido_coursera(perfil.description, curso.description)
             cursos_candidatos.append((id_course, cos_sim))
     # filtrar
-    cursos_filtrados = filtrar_cursos(cursos_candidatos, contexto)
+    cursos_filtrados = filtrar_cursos_coursera(cursos_candidatos, contexto)
     # ordenar
     cursos_filtrados.sort(key=lambda x: x[1])
     # devolver los k primeros
@@ -69,6 +79,36 @@ def explore_courses_coursera(perfil, contexto, k):
     while (indice < k) and (indice < len(cursos_filtrados)):
         id_course, _ = cursos_filtrados[indice]
         related_curso = df_cou.iloc[id_course]
+        resultados[id_course] = {'title': related_curso['title'], 'url': related_curso['url']}
+        indice = indice + 1
+
+    return resultados
+
+
+def explore_courses_udemy(perfil, contexto, k):
+    # crear feature usuario udemy
+    feature_usuario = convertir_datos_en_features_udemy(perfil)
+    # buscar su cluster
+    cluster_id = predecir_cluster_udemy(feature_usuario)
+    # crear lista
+    list_id_courses = df_cl_ude[df_cl_ude['Label'] == cluster_id].index.tolist()
+    cursos_candidatos = []
+    for id_course in list_id_courses:
+        curso = df_ude.iloc[int(id_course)]
+        curso_descripcion = curso.description + ". " + curso.description_extend
+        if (not pd.isnull(curso.description)):
+            cos_sim = calcular_similitud_contenido_udemy(perfil.description, curso_descripcion)
+            cursos_candidatos.append((id_course, cos_sim))
+    # filtrar
+    cursos_filtrados = filtrar_cursos_udemy(cursos_candidatos, contexto)
+    # ordenar
+    cursos_filtrados.sort(key=lambda x: x[1])
+    # devolver los k primeros
+    indice = 0
+    resultados = dict()
+    while (indice < k) and (indice < len(cursos_filtrados)):
+        id_course, _ = cursos_filtrados[indice]
+        related_curso = df_ude.iloc[id_course]
         resultados[id_course] = {'title': related_curso['title'], 'url': related_curso['url']}
         indice = indice + 1
 

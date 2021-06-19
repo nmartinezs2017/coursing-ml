@@ -13,3 +13,4 @@ class PerfilUsuario(BaseModel):
     n_reviews: int = 20000
     rating: float = 4.5
     institution: str = "Coursera"
+    cost: float = 10

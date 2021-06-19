@@ -178,16 +178,37 @@ numerical_data_coursera:
     index: False
     encoding: "utf-8"
 
-fe_coursera:
+
+categorical_data_udemy:
   type: pandas.CSVDataSet
-  filepath: data/03_primary/fe_coursera.csv
+  filepath: data/03_primary/categorical_data_udemy.csv
   fs_args:
     open_args_load:
       mode: "rb"
       encoding: "utf-8"
+    open_args_save:
+      index: False
+      mode: "wb"
+      encoding: "utf-8"
   save_args:
     index: False
-    encoding: "windows-1252"
+    encoding: "utf-8"
+
+
+numerical_data_udemy:
+  type: pandas.CSVDataSet
+  filepath: data/03_primary/numerical_data_udemy.csv
+  fs_args:
+    open_args_load:
+      mode: "rb"
+      encoding: "utf-8"
+    open_args_save:
+      index: False
+      mode: "wb"
+      encoding: "utf-8"
+  save_args:
+    index: False
+    encoding: "utf-8"
 
 categorical_features_udacity:
   type: pandas.CSVDataSet
@@ -200,6 +221,21 @@ numerical_features_udacity:
 categorical_features_coursera:
   type: pandas.CSVDataSet
   filepath: data/04_feature/categorical_features_coursera.csv
+  fs_args:
+    open_args_load:
+      mode: "rb"
+      encoding: "utf-8"
+    open_args_save:
+      index: False
+      mode: "wb"
+      encoding: "utf-8"
+  save_args:
+    index: False
+    encoding: "utf-8"
+
+categorical_features_udemy:
+  type: pandas.CSVDataSet
+  filepath: data/04_feature/categorical_features_udemy.csv
   fs_args:
     open_args_load:
       mode: "rb"
@@ -227,6 +263,21 @@ numerical_features_coursera:
     index: False
     encoding: "utf-8"
 
+numerical_features_udemy:
+  type: pandas.CSVDataSet
+  filepath: data/04_feature/numerical_features_udemy.csv
+  fs_args:
+    open_args_load:
+      mode: "rb"
+      encoding: "utf-8"
+    open_args_save:
+      index: False
+      mode: "wb"
+      encoding: "utf-8"
+  save_args:
+    index: False
+    encoding: "utf-8"
+
 clustering_model_udacity:
   type: pickle.PickleDataSet
   filepath: data/06_models/clustering_model_udacity.pkl
@@ -242,6 +293,10 @@ clustering_output_udacity:
 clustering_output_coursera:
   type: pandas.CSVDataSet
   filepath: data/07_model_output/clustering_output_coursera.csv
+
+clustering_output_udemy:
+  type: pandas.CSVDataSet
+  filepath: data/07_model_output/clustering_output_udemy.csv
 
 data_labeled_udacity:
   type: pandas.CSVDataSet
@@ -281,6 +336,10 @@ corpus_embeddings_coursera:
   type: pickle.PickleDataSet
   filepath: data/07_model_output/corpus_embeddings_coursera.pkl
 
+corpus_embeddings_udemy:
+  type: pickle.PickleDataSet
+  filepath: data/07_model_output/corpus_embeddings_udemy.pkl
+
 nlp_model_udacity:
   type: pickle.PickleDataSet
   filepath: data/06_models/nlp_model_udacity.pkl
@@ -288,6 +347,10 @@ nlp_model_udacity:
 nlp_model_coursera:
   type: pickle.PickleDataSet
   filepath: data/06_models/nlp_model_coursera.pkl
+
+nlp_model_udemy:
+  type: pickle.PickleDataSet
+  filepath: data/06_models/nlp_model_udemy.pkl
 
 pre_report_udacity:
   type: coursing_ml.io.ProfileReportDataSet

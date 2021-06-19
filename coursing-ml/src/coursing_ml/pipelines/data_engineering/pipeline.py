@@ -91,5 +91,23 @@ def create_pipeline(**kwargs):
                 outputs="cleaned_udemy",
                 name="feature_cleaning_udemy",
             ),
+            node(
+                func=feature_selection_udemy,
+                inputs="cleaned_udemy",
+                outputs=["categorical_data_udemy", "numerical_data_udemy"],
+                name="feature_selection_udemy",
+            ),
+            node(
+                func=f_engineering_categorical_features_udemy,
+                inputs="categorical_data_udemy",
+                outputs="categorical_features_udemy",
+                name="categorical_features_udemy",
+            ),
+            node(
+                func=f_engineering_numerical_features_udemy,
+                inputs="numerical_data_udemy",
+                outputs="numerical_features_udemy",
+                name="numerical_features_udemy",
+            ),
         ]
     )

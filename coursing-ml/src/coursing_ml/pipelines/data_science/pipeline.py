@@ -59,5 +59,11 @@ def create_pipeline(**kwargs):
                 "categorical_features_coursera",
                 ["corpus_embeddings_coursera", "nlp_model_coursera"]
             ),
+            node(
+                generate_embeddings_udemy,
+                "categorical_features_udemy",
+                ["corpus_embeddings_udemy", "nlp_model_udemy"],
+                name="generate_embeddings_udemy",
+            ),
         ]
     )

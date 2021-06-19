@@ -141,10 +141,15 @@ celerybeat-schedule
 # large files
 corpus_embeddings_udacity.pkl
 corpus_embeddings_coursera.pkl
+corpus_embeddings_udemy.pkl
 nlp_model_coursera.pkl
 nlp_model_udacity.pkl
+nlp_model_udemy.pkl
 udemy_scrapped.csv
-
+cleaned_udemy.csv
+preprocessed_udemy.csv
+categorical_data_udemy.csv
+numerical_data_udemy.csv
 # SageMath parsed files
 *.sage.py
 

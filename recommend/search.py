@@ -3,12 +3,17 @@ from sentence_transformers import util
 from kedro.framework.context.context import load_context
 
 context = load_context('../coursing-ml/')
-df_ud = context.catalog.load("cleaned_udacity")
-df_cou = context.catalog.load("cleaned_coursera")
-corpus_embeddings_udacity = context.catalog.load("corpus_embeddings_udacity")
-corpus_embeddings_coursera = context.catalog.load("corpus_embeddings_coursera")
 model_udacity = context.catalog.load("nlp_model_udacity")
 model_coursera = context.catalog.load("nlp_model_coursera")
+model_udemy = context.catalog.load("nlp_model_udemy")
+
+df_ud = context.catalog.load("cleaned_udacity")
+df_cou = context.catalog.load("cleaned_coursera")
+df_ude = context.catalog.load("cleaned_udemy")
+
+corpus_embeddings_udacity = context.catalog.load("corpus_embeddings_udacity")
+corpus_embeddings_coursera = context.catalog.load("corpus_embeddings_coursera")
+corpus_embeddings_coursera = context.catalog.load("corpus_embeddings_udemy")
 
 
 def query_understanding(name_model, query):
@@ -16,6 +21,8 @@ def query_understanding(name_model, query):
         embedding = model_udacity.encode(query, convert_to_tensor=True)
     elif (name_model == 'coursera'):
         embedding = model_coursera.encode(query, convert_to_tensor=True)
+    elif (name_model == 'udemy'):
+        embedding = model_udemy.encode(query, convert_to_tensor=True)
     return embedding
 
 
@@ -24,6 +31,8 @@ def top_k_retrieval(name_model, query_embedding, k = 10):
         search_hits = util.semantic_search(query_embedding, corpus_embeddings_udacity, top_k=k)[0]
     elif (name_model == 'coursera'):
         search_hits = util.semantic_search(query_embedding, corpus_embeddings_coursera, top_k=k)[0]
+    elif (name_model == 'udemy'):
+        search_hits = util.semantic_search(query_embedding, corpus_embeddings_udemy, top_k=k)[0]
     return search_hits
 
 
@@ -54,4 +63,14 @@ def search_courses_coursera(query, contexto, k=10):
     top_k = top_k_retrieval("coursera", query_embedding, k+len_context)
 
     results = result_ranking(top_k, contexto, df_cou)
+    return results
+
+
+def search_courses_udemy(query, contexto, k=10):
+    query_embedding = query_understanding("udemy", query)
+    len_context = len(contexto)
+
+    top_k = top_k_retrieval("udemy", query_embedding, k+len_context)
+
+    results = result_ranking(top_k, contexto, df_ude)
     return results
