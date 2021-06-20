@@ -35,8 +35,8 @@ def filtrar_cursos_coursera(cursos_candidatos, contexto):
     resultado = []
     for candidato_id, score in cursos_candidatos:
         curso_candidato = get_curso_coursera(candidato_id)
-        idioma_correcto = curso_candidato.language in contexto.lista_idiomas
-        nuevo_contenido = candidato_id not in contexto.cursos_descartados
+        idioma_correcto = curso_candidato.language in contexto.language_list
+        nuevo_contenido = candidato_id not in contexto.discarded_courses
         if idioma_correcto and nuevo_contenido:
             resultado.append((candidato_id, score))
     return resultado
@@ -47,8 +47,8 @@ def filtrar_cursos_udemy(cursos_candidatos, contexto):
     resultado = []
     for candidato_id, score in cursos_candidatos:
         curso_candidato = get_curso_udemy(candidato_id)
-        idioma_correcto = curso_candidato.language in contexto.lista_idiomas
-        nuevo_contenido = candidato_id not in contexto.cursos_descartados
+        idioma_correcto = curso_candidato.language in contexto.language_list
+        nuevo_contenido = candidato_id not in contexto.discarded_courses
         if idioma_correcto and nuevo_contenido:
             resultado.append((candidato_id, score))
     return resultado
@@ -118,7 +118,7 @@ def get_curso_udemy(id: int):
     return df_ude.iloc[id]
 
 
-def importar_encoders_udacity():
+def import_encoders_udacity():
     pkl_file = open('encoders/encoders_udacity.pkl', 'rb')
     encoders_dict = pickle.load(pkl_file)
     pkl_file.close()
@@ -127,7 +127,7 @@ def importar_encoders_udacity():
     return ss, mms
 
 
-def importar_encoders_udemy():
+def import_encoders_udemy():
     pkl_file = open('encoders/encoders_udemy.pkl', 'rb')
     udemy_encoders_dict = pickle.load(pkl_file)
     pkl_file.close()
@@ -135,7 +135,7 @@ def importar_encoders_udemy():
     return udemy_powertransformer
 
 
-def importar_encoders_coursera():
+def import_encoders_coursera():
     pkl_file = open('encoders/encoders_coursera.pkl', 'rb')
     coursera_encoders_dict = pickle.load(pkl_file)
     coursera_inst_imputer = coursera_encoders_dict["coursera_inst_imputer"]
@@ -146,14 +146,14 @@ def importar_encoders_coursera():
     return coursera_inst_imputer, coursera_rating_transformer, coursera_inst_encoder, coursera_powertransformer
 
 
-def convertir_datos_en_features_coursera(perfil: PerfilUsuario):
+def convertir_datos_en_features_coursera(perfil: UserProfile):
     if (perfil.difficulty == 'beginner'):
         user_difficulty = 0
     elif (perfil.difficulty == 'intermediate'):
         user_difficulty = 1
     else:
         user_difficulty = 2
-    df_user = pd.DataFrame([[user_difficulty, perfil.duration, perfil.n_reviews, perfil.rating, perfil.institution]], columns=["difficulty","total_hours","enrolled", "rating", "institution"])
+    df_user = pd.DataFrame([[user_difficulty, perfil.duration, perfil.students, perfil.rating, perfil.institution]], columns=["difficulty","total_hours","enrolled", "rating", "institution"])
     df_user['rating'] = coursera_rating_transformer.transform(df_user[['rating']])
     numerical_features = ['difficulty', 'total_hours', 'enrolled', 'rating']
     df_user[numerical_features] = coursera_powertransformer.transform(df_user[numerical_features])
@@ -161,7 +161,7 @@ def convertir_datos_en_features_coursera(perfil: PerfilUsuario):
     return df_user.iloc[0].to_numpy()
 
 
-def convertir_datos_en_features_udacity(perfil: PerfilUsuario):
+def convertir_datos_en_features_udacity(perfil: UserProfile):
     if (perfil.difficulty == 'beginner'):
         user_difficulty = 0
     elif (perfil.difficulty == 'intermediate'):
@@ -176,8 +176,8 @@ def convertir_datos_en_features_udacity(perfil: PerfilUsuario):
     return [user_difficulty, user_duration[0][0], user_popularity, user_rating[0][0], user_free]
 
 
-def convertir_datos_en_features_udemy(perfil: PerfilUsuario):
-    df_user = pd.DataFrame([[perfil.cost, perfil.n_reviews, perfil.rating, perfil.duration]], columns=['cost', 'n_students', 'rating', 'hours'])
+def convertir_datos_en_features_udemy(perfil: UserProfile):
+    df_user = pd.DataFrame([[perfil.cost, perfil.students, perfil.rating, perfil.duration]], columns=['cost', 'n_students', 'rating', 'hours'])
     numerical_features = ['cost', 'n_students', 'rating', 'hours']
     df_user[numerical_features] = coursera_powertransformer.transform(df_user[numerical_features])
 
@@ -203,6 +203,6 @@ def predecir_cluster_udemy(feature_usuario):
 
 
 ##### inicialización #####
-ss, mms = importar_encoders_udacity()
-coursera_inst_imputer, coursera_rating_transformer, coursera_inst_encoder, coursera_powertransformer = importar_encoders_coursera()
-udemy_powertransformer = importar_encoders_udemy()
+ss, mms = import_encoders_udacity()
+coursera_inst_imputer, coursera_rating_transformer, coursera_inst_encoder, coursera_powertransformer = import_encoders_coursera()
+udemy_powertransformer = import_encoders_udemy()

@@ -35,7 +35,7 @@ corpus_embeddings_udacity = context.catalog.load("corpus_embeddings_udacity")
 corpus_embeddings_coursera = context.catalog.load("corpus_embeddings_coursera")
 corpus_embeddings_udemy = context.catalog.load("corpus_embeddings_udemy")
 
-def escoger_recomendaciones_udacity(candidatos_ids, vector_usuario, contexto, k):
+def choose_recommendations_udacity(candidatos_ids, vector_usuario, contexto, k):
     resultados = dict()
     indice = 0
 
@@ -62,7 +62,7 @@ def escoger_recomendaciones_udacity(candidatos_ids, vector_usuario, contexto, k)
     return resultados
 
 
-def escoger_recomendaciones_coursera(candidatos_ids, vector_usuario, contexto, k):
+def choose_recommendations_coursera(candidatos_ids, vector_usuario, contexto, k):
     resultados = dict()
     indice = 0
 
@@ -91,7 +91,7 @@ def escoger_recomendaciones_coursera(candidatos_ids, vector_usuario, contexto, k
     return resultados
 
 
-def escoger_recomendaciones_udemy(candidatos_ids, vector_usuario, contexto, k):
+def choose_recommendations_udemy(candidatos_ids, vector_usuario, contexto, k):
     resultados = dict()
     indice = 0
 
@@ -116,7 +116,7 @@ def escoger_recomendaciones_udemy(candidatos_ids, vector_usuario, contexto, k):
     return resultados
 
 
-def crear_lista_recomendaciones_udacity(perfil, contexto, k, query = ""):
+def create_list_recommendations_udacity(perfil, contexto, k, query = ""):
     # buscar cursos que por contenido puedan interesar al usuario
     query_embedding = model_udacity.encode(perfil.description + query, convert_to_tensor=True)
     search_hits = util.semantic_search(query_embedding, corpus_embeddings_udacity, top_k=30)
@@ -128,10 +128,10 @@ def crear_lista_recomendaciones_udacity(perfil, contexto, k, query = ""):
     # predecir el cluster del user a partir de sus características
     user_embedding = convertir_datos_en_features_udacity(perfil)
   #  df_user = pd.DataFrame([user_embedding], columns=["difficulty", "duration", "n_reviews", "rating", "free"])
-    list_recommendations = escoger_recomendaciones_udacity(list_ids, user_embedding, contexto, k)
+    list_recommendations = choose_recommendations_udacity(list_ids, user_embedding, contexto, k)
     return list_recommendations
 
-def crear_lista_recomendaciones_coursera(perfil, contexto, k, query = ""):
+def create_list_recommendations_coursera(perfil, contexto, k, query = ""):
     # buscar cursos que por contenido puedan interesar al usuario
     query_embedding = model_coursera.encode(perfil.description + query, convert_to_tensor=True)
     search_hits = util.semantic_search(query_embedding, corpus_embeddings_coursera, top_k=100)
@@ -142,11 +142,11 @@ def crear_lista_recomendaciones_coursera(perfil, contexto, k, query = ""):
 
     # predecir el cluster del user a partir de sus características
     user_embedding = convertir_datos_en_features_coursera(perfil)
-    list_recommendations = escoger_recomendaciones_coursera(list_ids, user_embedding, contexto, k)
+    list_recommendations = choose_recommendations_coursera(list_ids, user_embedding, contexto, k)
     return list_recommendations
 
 
-def crear_lista_recomendaciones_udemy(perfil, contexto, k, query = ""):
+def create_list_recommendations_udemy(perfil, contexto, k, query = ""):
     # buscar cursos que por contenido puedan interesar al usuario
     query_embedding = model_udemy.encode(perfil.description + query, convert_to_tensor=True)
     search_hits = util.semantic_search(query_embedding, corpus_embeddings_udemy, top_k=100)
@@ -159,11 +159,11 @@ def crear_lista_recomendaciones_udemy(perfil, contexto, k, query = ""):
 
     # predecir el cluster del user a partir de sus características
     user_embedding = convertir_datos_en_features_udemy(perfil)
-    list_recommendations = escoger_recomendaciones_udemy(list_ids, user_embedding, contexto, k)
+    list_recommendations = choose_recommendations_udemy(list_ids, user_embedding, contexto, k)
     return list_recommendations
 
 
 ##### inicialización #####
-ss, mms = importar_encoders_udacity()
-coursera_inst_imputer, coursera_rating_transformer, coursera_inst_encoder, coursera_powertransformer = importar_encoders_coursera()
-udemy_powertransformer = importar_encoders_udemy()
+ss, mms = import_encoders_udacity()
+coursera_inst_imputer, coursera_rating_transformer, coursera_inst_encoder, coursera_powertransformer = import_encoders_coursera()
+udemy_powertransformer = import_encoders_udemy()

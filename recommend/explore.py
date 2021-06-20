@@ -36,7 +36,7 @@ def explore_courses_udacity(perfil, contexto, k):
     list_id_courses = df_cl_ud[df_cl_ud['Label'] == cluster_id].index.tolist()
     cursos_candidatos = []
     for id_course in list_id_courses:
-        curso = df_ud.iloc[int(id_course)]
+        curso = get_curso_udacity(int(id_course))
         if (not pd.isnull(curso.description)):
             cos_sim = calcular_similitud_contenido_udacity(perfil.description, curso.description)
             cursos_candidatos.append((id_course, cos_sim))
@@ -63,7 +63,7 @@ def explore_courses_coursera(perfil, contexto, k):
     list_id_courses = df_cl_cou[df_cl_cou['Label'] == cluster_id].index.tolist()
     cursos_candidatos = []
     for id_course in list_id_courses:
-        curso = df_cou.iloc[int(id_course)]
+        curso = get_curso_coursera(int(id_course))
         if (not pd.isnull(curso.description)):
             cos_sim = calcular_similitud_contenido_coursera(perfil.description, curso.description)
             cursos_candidatos.append((id_course, cos_sim))
@@ -92,13 +92,15 @@ def explore_courses_udemy(perfil, contexto, k):
     list_id_courses = df_cl_ude[df_cl_ude['Label'] == cluster_id].index.tolist()
     cursos_candidatos = []
     for id_course in list_id_courses:
-        curso = df_ude.iloc[int(id_course)]
+        curso = get_curso_udemy(int(id_course))
         curso_descripcion = curso.description + ". " + curso.description_extend
         if (not pd.isnull(curso.description)):
             cos_sim = calcular_similitud_contenido_udemy(perfil.description, curso_descripcion)
             cursos_candidatos.append((id_course, cos_sim))
     # filtrar
+    print(cursos_candidatos)
     cursos_filtrados = filtrar_cursos_udemy(cursos_candidatos, contexto)
+    print(cursos_filtrados)
     # ordenar
     cursos_filtrados.sort(key=lambda x: x[1])
     # devolver los k primeros
