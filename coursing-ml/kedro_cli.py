@@ -51,7 +51,7 @@ PROJ_PATH = Path(__file__).resolve().parent
 ENV_ARG_HELP = """Run the pipeline in a configured environment. If not specified,
 pipeline will run using environment `local`."""
 FROM_INPUTS_HELP = (
-    """A list of dataset names which should be used as a starting point."""
+    """A list of datasets names which should be used as a starting point."""
 )
 FROM_NODES_HELP = """A list of node names which should be used as a starting point."""
 TO_NODES_HELP = """A list of node names which should be used as an end point."""
@@ -67,7 +67,7 @@ with threads. If not specified, load and save datasets synchronously."""
 TAG_ARG_HELP = """Construct the pipeline using only nodes which have this tag
 attached. Option can be used multiple times, what results in a
 pipeline constructed from nodes having any of those tags."""
-LOAD_VERSION_HELP = """Specify a particular dataset version (timestamp) for loading."""
+LOAD_VERSION_HELP = """Specify a particular datasets version (timestamp) for loading."""
 CONFIG_FILE_HELP = """Specify a YAML configuration file to load the run
 command arguments from. If command line arguments are provided, they will
 override the loaded ones."""

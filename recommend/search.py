@@ -1,19 +1,17 @@
-
 from sentence_transformers import util
-from kedro.framework.context.context import load_context
+import pandas as pd
 
-context = load_context('../coursing-ml/')
-model_udacity = context.catalog.load("nlp_model_udacity")
-model_coursera = context.catalog.load("nlp_model_coursera")
-model_udemy = context.catalog.load("nlp_model_udemy")
+model_udacity = pd.read_pickle("models/nlp_model_udacity.pkl")
+model_coursera = pd.read_pickle("models/nlp_model_coursera.pkl")
+model_udemy = pd.read_pickle("models/nlp_model_udemy.pkl")
 
-df_ud = context.catalog.load("cleaned_udacity")
-df_cou = context.catalog.load("cleaned_coursera")
-df_ude = context.catalog.load("cleaned_udemy")
+df_ud = pd.read_csv("datasets/cleaned_udacity.csv")
+df_cou = pd.read_csv("datasets/cleaned_coursera.csv")
+df_ude = pd.read_csv("datasets/cleaned_udemy.csv")
 
-corpus_embeddings_udacity = context.catalog.load("corpus_embeddings_udacity")
-corpus_embeddings_coursera = context.catalog.load("corpus_embeddings_coursera")
-corpus_embeddings_udemy = context.catalog.load("corpus_embeddings_udemy")
+corpus_embeddings_udacity = pd.read_pickle("model_output/corpus_embeddings_udacity.pkl")
+corpus_embeddings_coursera = pd.read_pickle("model_output/corpus_embeddings_coursera.pkl")
+corpus_embeddings_udemy = pd.read_pickle("model_output/corpus_embeddings_udemy.pkl")
 
 
 def query_to_embedding(name_model, query):

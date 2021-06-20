@@ -1,30 +1,28 @@
-import math
+
 import os
 import sys
 import pandas as pd
-import numpy as np
 csfp = os.path.abspath(os.path.dirname(__file__))
 if csfp not in sys.path:
     sys.path.insert(0, csfp)
 from common import *
-from kedro.framework.context import load_context
-from sentence_transformers import util
-context = load_context('../coursing-ml/')
-model_udacity = context.catalog.load("nlp_model_udacity")
-model_coursera = context.catalog.load("nlp_model_coursera")
-model_udemy = context.catalog.load("nlp_model_udemy")
 
-clustering_model_udacity = context.catalog.load("clustering_model_udacity")
-clustering_model_coursera = context.catalog.load("clustering_model_coursera")
-clustering_model_udemy = context.catalog.load("clustering_model_udemy")
 
-df_ud = context.catalog.load("cleaned_udacity")
-df_cou = context.catalog.load("cleaned_coursera")
-df_ude = context.catalog.load("cleaned_udemy")
+model_udacity = pd.read_pickle("models/nlp_model_udacity.pkl")
+model_coursera = pd.read_pickle("models/nlp_model_coursera.pkl")
+model_udemy = pd.read_pickle("models/nlp_model_udemy.pkl")
 
-df_cl_ud = context.catalog.load("clustering_output_udacity")
-df_cl_cou = context.catalog.load("clustering_output_coursera")
-df_cl_ude = context.catalog.load("clustering_output_udemy")
+clustering_model_udacity = pd.read_pickle("models/clustering_model_udacity.pkl")
+clustering_model_coursera = pd.read_pickle("models/clustering_model_coursera.pkl")
+clustering_model_udemy = pd.read_pickle("models/clustering_model_udemy.pkl")
+
+df_ud = pd.read_csv("datasets/cleaned_udacity.csv")
+df_cou = pd.read_csv("datasets/cleaned_coursera.csv")
+df_ude = pd.read_csv("datasets/cleaned_udemy.csv")
+
+df_cl_ud = pd.read_csv("model_output/clustering_output_udacity.csv")
+df_cl_cou = pd.read_csv("model_output/clustering_output_coursera.csv")
+df_cl_ude = pd.read_csv("model_output/clustering_output_udemy.csv")
 
 
 def explore_courses_udacity(perfil, contexto, k):
