@@ -63,6 +63,15 @@ def clustering_coursera(df: pd.DataFrame, data: pd.DataFrame):
     data['Label'] = cluster_labels
     return [df, data, clusterer]
 
+
+def clustering_udemy(df: pd.DataFrame, data: pd.DataFrame):
+    clusterer = hdbscan.HDBSCAN(min_samples=1, min_cluster_size=500, prediction_data=True)
+    cluster_labels = clusterer.fit_predict(df)
+    df['Label'] = cluster_labels
+    data['Label'] = cluster_labels
+    return [df, data, clusterer]
+
+
 def generate_embeddings_udacity(df: pd.DataFrame):
     df['description'] = df.description.replace(np.nan, '', regex=True)
     # borrar columnas innecesarias

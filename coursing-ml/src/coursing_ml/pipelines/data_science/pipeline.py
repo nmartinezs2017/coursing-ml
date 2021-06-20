@@ -50,6 +50,12 @@ def create_pipeline(**kwargs):
                 ["clustering_output_coursera", "data_labeled_coursera", "clustering_model_coursera"],
             ),
             node(
+                clustering_udemy,
+                ["numerical_features_udemy", "numerical_data_udemy"],
+                ["clustering_output_udemy", "data_labeled_udemy", "clustering_model_udemy"],
+                name="clustering_udemy",
+            ),
+            node(
                 generate_embeddings_udacity,
                 "categorical_features_udacity",
                 ["corpus_embeddings_udacity", "nlp_model_udacity"]

@@ -150,6 +150,9 @@ cleaned_udemy.csv
 preprocessed_udemy.csv
 categorical_data_udemy.csv
 numerical_data_udemy.csv
+clustering_output_udemy.csv
+clustering_model_udemy.pkl
+data_labeled_udemy.csv
 # SageMath parsed files
 *.sage.py
 

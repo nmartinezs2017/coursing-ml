@@ -286,6 +286,10 @@ clustering_model_coursera:
   type: pickle.PickleDataSet
   filepath: data/06_models/clustering_model_coursera.pkl
 
+clustering_model_udemy:
+  type: pickle.PickleDataSet
+  filepath: data/06_models/clustering_model_udemy.pkl
+
 clustering_output_udacity:
   type: pandas.CSVDataSet
   filepath: data/07_model_output/clustering_output_udacity.csv
@@ -316,6 +320,21 @@ data_labeled_udacity:
 data_labeled_coursera:
   type: pandas.CSVDataSet
   filepath: data/07_model_output/data_labeled_coursera.csv
+  fs_args:
+    open_args_load:
+      mode: "rb"
+      encoding: "utf-8"
+    open_args_save:
+      index: False
+      mode: "wb"
+      encoding: "utf-8"
+  save_args:
+    index: False
+    encoding: "utf-8"
+
+data_labeled_udemy:
+  type: pandas.CSVDataSet
+  filepath: data/07_model_output/data_labeled_udemy.csv
   fs_args:
     open_args_load:
       mode: "rb"
