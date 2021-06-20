@@ -80,7 +80,7 @@ def calcular_similitud_features_udemy(usuario_embedding, curso_id):
     rating = curso['rating']
     if (np.isnan(rating)):
         rating = 0
-    curso_embedding = [curso['cost'], curso['n_students'], curso['rating'], rating]
+    curso_embedding = [curso['cost'], curso['n_students'], curso['rating'], curso['hours']]
     cos_sim = dot(curso_embedding, usuario_embedding) / (norm(curso_embedding) * norm(usuario_embedding))
     return cos_sim
 
@@ -115,11 +115,11 @@ def get_curso_coursera(id: int):
 
 
 def get_curso_udemy(id: int):
-    return df_cou.iloc[id]
+    return df_ude.iloc[id]
 
 
 def importar_encoders_udacity():
-    pkl_file = open('encoders_udacity.pkl', 'rb')
+    pkl_file = open('encoders/encoders_udacity.pkl', 'rb')
     encoders_dict = pickle.load(pkl_file)
     pkl_file.close()
     ss = encoders_dict["udacity_duration_ss"]
@@ -128,15 +128,15 @@ def importar_encoders_udacity():
 
 
 def importar_encoders_udemy():
-    pkl_file = open('encoders_udemy.pkl', 'rb')
+    pkl_file = open('encoders/encoders_udemy.pkl', 'rb')
     udemy_encoders_dict = pickle.load(pkl_file)
     pkl_file.close()
-    udemy_powertransformer = udemy_encoders_dict["coursera_powertransformer"]
+    udemy_powertransformer = udemy_encoders_dict["udemy_powertransformer"]
     return udemy_powertransformer
 
 
 def importar_encoders_coursera():
-    pkl_file = open('encoders_coursera.pkl', 'rb')
+    pkl_file = open('encoders/encoders_coursera.pkl', 'rb')
     coursera_encoders_dict = pickle.load(pkl_file)
     coursera_inst_imputer = coursera_encoders_dict["coursera_inst_imputer"]
     coursera_rating_transformer = coursera_encoders_dict["coursera_rating_transformer"]
@@ -154,7 +154,7 @@ def convertir_datos_en_features_coursera(perfil: PerfilUsuario):
     else:
         user_difficulty = 2
     df_user = pd.DataFrame([[user_difficulty, perfil.duration, perfil.n_reviews, perfil.rating, perfil.institution]], columns=["difficulty","total_hours","enrolled", "rating", "institution"])
-    df_user = coursera_rating_transformer.transform(df_user)
+    df_user['rating'] = coursera_rating_transformer.transform(df_user[['rating']])
     numerical_features = ['difficulty', 'total_hours', 'enrolled', 'rating']
     df_user[numerical_features] = coursera_powertransformer.transform(df_user[numerical_features])
     df_user = coursera_inst_encoder.transform(df_user)

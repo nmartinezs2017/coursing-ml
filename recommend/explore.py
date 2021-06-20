@@ -40,17 +40,15 @@ def explore_courses_udacity(perfil, contexto, k):
         if (not pd.isnull(curso.description)):
             cos_sim = calcular_similitud_contenido_udacity(perfil.description, curso.description)
             cursos_candidatos.append((id_course, cos_sim))
-    # filtrar
-    cursos_filtrados = filtrar_cursos(cursos_candidatos, contexto)
     # ordenar
-    cursos_filtrados.sort(key=lambda x: x[1])
+    cursos_candidatos.sort(key=lambda x: x[1])
     # devolver los k primeros
     indice = 0
     resultados = dict()
-    while (indice < k) and (indice < len(cursos_filtrados)):
-        id_course, _ = cursos_filtrados[indice]
+    while (indice < k) and (indice < len(cursos_candidatos)):
+        id_course, _ = cursos_candidatos[indice]
         related_course = df_ud.iloc[id_course]
-        resultados[id_course] = {'title': related_course['title'], 'url': related_course['url']}
+        resultados[id_course] = {'id': id_course, 'title': related_course['title'], 'url': related_course['url']}
         indice = indice + 1
 
     return resultados
@@ -79,7 +77,7 @@ def explore_courses_coursera(perfil, contexto, k):
     while (indice < k) and (indice < len(cursos_filtrados)):
         id_course, _ = cursos_filtrados[indice]
         related_curso = df_cou.iloc[id_course]
-        resultados[id_course] = {'title': related_curso['title'], 'url': related_curso['url']}
+        resultados[id_course] = {'id': id_course, 'title': related_curso['title'], 'url': related_curso['url']}
         indice = indice + 1
 
     return resultados
@@ -109,7 +107,7 @@ def explore_courses_udemy(perfil, contexto, k):
     while (indice < k) and (indice < len(cursos_filtrados)):
         id_course, _ = cursos_filtrados[indice]
         related_curso = df_ude.iloc[id_course]
-        resultados[id_course] = {'title': related_curso['title'], 'url': related_curso['url']}
+        resultados[id_course] = {'id': id_course, 'title': related_curso['title'], 'url': related_curso['url']}
         indice = indice + 1
 
     return resultados

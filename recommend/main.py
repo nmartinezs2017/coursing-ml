@@ -64,11 +64,11 @@ def recommendation_coursera(perfil: PerfilUsuario, id_course: int, contexto: Opt
 
 
 @app.post("/recommend_related_courses_udemy/")
-def recommendation_coursera(perfil: PerfilUsuario, id_course: int, contexto: Optional[ContextoUsuario], k: Optional[int] = 10):
-    curso_description = get_curso_coursera(id_course)["description"]
-    curso_description_extend = get_curso_coursera(id_course)["description"]
+def recommendation_udemy(perfil: PerfilUsuario, id_course: int, contexto: Optional[ContextoUsuario], k: Optional[int] = 10):
+    curso_description = get_curso_udemy(id_course)["description"]
+    curso_description_extend = get_curso_udemy(id_course)["description"]
     curso_description = curso_description + curso_description_extend
-    list_recommendations = crear_lista_recomendaciones_coursera(perfil, contexto, k, curso_description)
+    list_recommendations = crear_lista_recomendaciones_udemy(perfil, contexto, k, curso_description)
     return {'list_recommendations': list_recommendations}
 
 
@@ -85,8 +85,8 @@ def recommendation_coursera(perfil: PerfilUsuario, query:str, contexto: Optional
 
 
 @app.post("/recommend_related_query_udemy/")
-def recommendation_coursera(perfil: PerfilUsuario, query:str, contexto: Optional[ContextoUsuario], k: Optional[int] = 10):
-    list_recommendations = crear_lista_recomendaciones_coursera(perfil, contexto, k, query)
+def recommendation_udemy(perfil: PerfilUsuario, query:str, contexto: Optional[ContextoUsuario], k: Optional[int] = 10):
+    list_recommendations = crear_lista_recomendaciones_udemy(perfil, contexto, k, query)
     return {'list_recommendations': list_recommendations}
 
 
