@@ -15,27 +15,27 @@ app = FastAPI()
 
 @app.post("/search_courses_udacity/")
 def semantic_search_udacity(query: str, contexto: Optional[UserContext], k: Optional[int] = 10):
-    list_courses_udacity = search_courses_udacity(query, contexto.discarded_courses, k)
+    list_courses_udacity = search_courses_udacity(query, contexto, k)
     return list_courses_udacity
 
 
 @app.post("/search_courses_coursera/")
 def semantic_search_coursera(query: str, contexto: Optional[UserContext], k: Optional[int] = 10):
-    list_courses_coursera = search_courses_coursera(query, contexto.discarded_courses, k)
+    list_courses_coursera = search_courses_coursera(query, contexto, k)
     return list_courses_coursera
 
 
 @app.post("/search_courses_udemy/")
 def semantic_search_udemy(query: str, contexto: Optional[UserContext], k: Optional[int] = 10):
-    list_courses_udemy = search_courses_udemy(query, contexto.discarded_courses, k)
+    list_courses_udemy = search_courses_udemy(query, contexto, k)
     return list_courses_udemy
 
 
 @app.post("/search_courses_global/")
 def semantic_search_global(query: str, contexto: Optional[UserContext], k: Optional[int] = 10):
-    list_courses_udacity = search_courses_udacity(query, contexto.discarded_courses, k)
-    list_courses_coursera = search_courses_coursera(query, contexto.discarded_courses, k)
-    list_courses_udemy = search_courses_udemy(query, contexto.discarded_courses, k)
+    list_courses_udacity = search_courses_udacity(query, contexto, k)
+    list_courses_coursera = search_courses_coursera(query, contexto, k)
+    list_courses_udemy = search_courses_udemy(query, contexto, k)
     return {"courses_udacity": list_courses_udacity, "courses_coursera": list_courses_coursera, "courses_udemy": list_courses_udemy}
 
 

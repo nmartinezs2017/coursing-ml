@@ -34,39 +34,37 @@ def top_k_retrieval(name_model, query_embedding, k = 10):
     return search_hits
 
 
-def result_ranking(top_k, lista_descartados, df):
+def result_ranking(top_k, contexto, df):
     results = dict()
     for hit in top_k:
         related_course = df.iloc[hit['corpus_id']]
         id_hit = int(hit['corpus_id'])
-        if id_hit not in lista_descartados:
-            results[str(hit['corpus_id'])] = {"id": id_hit, "score": float(hit['score']), "title": related_course['title'], "url": related_course["url"] }
+        idioma_correcto = related_course.language in contexto.language_list
+        nuevo_contenido = id_hit not in contexto.discarded_courses
+        if idioma_correcto and nuevo_contenido:
+            results[str(id_hit)] = {"title": related_course['title'], "url": related_course["url"] }
     return results
 
 
 def search_courses_udacity(query, contexto, k=10):
     query_embedding = query_to_embedding("udacity", query)
-    len_context = len(contexto)
-
+    len_context = len(contexto.discarded_courses)
     top_k = top_k_retrieval("udacity", query_embedding, k+len_context)
-
     results = result_ranking(top_k, contexto, df_ud)
     return results
 
 
 def search_courses_coursera(query, contexto, k=10):
     query_embedding = query_to_embedding("coursera", query)
-    len_context = len(contexto)
-
+    len_context = len(contexto.discarded_courses)
     top_k = top_k_retrieval("coursera", query_embedding, k+len_context)
-
     results = result_ranking(top_k, contexto, df_cou)
     return results
 
 
 def search_courses_udemy(query, contexto, k=10):
     query_embedding = query_to_embedding("udemy", query)
-    len_context = len(contexto)
+    len_context = len(contexto.discarded_courses)
 
     top_k = top_k_retrieval("udemy", query_embedding, k+len_context)
 

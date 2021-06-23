@@ -151,11 +151,11 @@ def convertir_datos_en_features_coursera(perfil: UserProfile):
         user_difficulty = 1
     else:
         user_difficulty = 2
-    df_user = pd.DataFrame([[user_difficulty, perfil.duration, perfil.students, perfil.rating, perfil.institution]], columns=["difficulty","total_hours","enrolled", "rating", "institution"])
+    df_user = pd.DataFrame([[user_difficulty, perfil.duration, perfil.students, perfil.rating, 0.1807892321810951]], columns=["difficulty","total_hours","enrolled", "rating", "institution"])
     df_user['rating'] = coursera_rating_transformer.transform(df_user[['rating']])
     numerical_features = ['difficulty', 'total_hours', 'enrolled', 'rating']
     df_user[numerical_features] = coursera_powertransformer.transform(df_user[numerical_features])
-    df_user = coursera_inst_encoder.transform(df_user)
+    # df_user = coursera_inst_encoder.transform(df_user)
     return df_user.iloc[0].to_numpy()
 
 
