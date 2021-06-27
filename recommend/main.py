@@ -13,25 +13,25 @@ from recommendation import *
 app = FastAPI()
 
 
-@app.post("/search_courses_udacity/")
+@app.post("/courses/udacity/search/")
 def semantic_search_udacity(query: str, contexto: Optional[UserContext], k: Optional[int] = 10):
     list_courses_udacity = search_courses_udacity(query, contexto, k)
     return list_courses_udacity
 
 
-@app.post("/search_courses_coursera/")
+@app.post("/courses/coursera/search/")
 def semantic_search_coursera(query: str, contexto: Optional[UserContext], k: Optional[int] = 10):
     list_courses_coursera = search_courses_coursera(query, contexto, k)
     return list_courses_coursera
 
 
-@app.post("/search_courses_udemy/")
+@app.post("/courses/udemy/search/")
 def semantic_search_udemy(query: str, contexto: Optional[UserContext], k: Optional[int] = 10):
     list_courses_udemy = search_courses_udemy(query, contexto, k)
     return list_courses_udemy
 
 
-@app.post("/search_courses_global/")
+@app.post("/courses/global/search/")
 def semantic_search_global(query: str, contexto: Optional[UserContext], k: Optional[int] = 10):
     list_courses_udacity = search_courses_udacity(query, contexto, k)
     list_courses_coursera = search_courses_coursera(query, contexto, k)
@@ -39,25 +39,25 @@ def semantic_search_global(query: str, contexto: Optional[UserContext], k: Optio
     return {"courses_udacity": list_courses_udacity, "courses_coursera": list_courses_coursera, "courses_udemy": list_courses_udemy}
 
 
-@app.post("/recommend_courses_udacity/")
+@app.post("/courses/udacity/recommend/profile")
 def recommendation_udacity(perfil: UserProfile, contexto: Optional[UserContext], k: Optional[int] = 10):
     list_recommendations = create_list_recommendations_udacity(perfil, contexto, k)
     return {'list_recommendations': list_recommendations}
 
 
-@app.post("/recommend_courses_udemy/")
+@app.post("/courses/udemy/recommend/profile")
 def recommendation_udemy(perfil: UserProfile, contexto: Optional[UserContext], k: Optional[int] = 10):
     list_recommendations = create_list_recommendations_udemy(perfil, contexto, k)
     return {'list_recommendations': list_recommendations}
 
 
-@app.post("/recommend_courses_coursera/")
+@app.post("/courses/coursera/recommend/profile")
 def recommendation_coursera(perfil: UserProfile, contexto: Optional[UserContext], k: Optional[int] = 10):
     list_recommendations = create_list_recommendations_coursera(perfil, contexto, k)
     return {'list_recommendations': list_recommendations}
 
 
-@app.post("/recommend_courses_global/")
+@app.post("/courses/global/recommend/profile")
 def recommendation_global(perfil: UserProfile, contexto: Optional[UserContext], k: Optional[int] = 10):
     list_courses_coursera = create_list_recommendations_coursera(perfil, contexto, k)
     list_courses_udemy = create_list_recommendations_udemy(perfil, contexto, k)
@@ -65,22 +65,22 @@ def recommendation_global(perfil: UserProfile, contexto: Optional[UserContext], 
     return {"courses_udacity": list_courses_udacity, "courses_coursera": list_courses_coursera, "courses_udemy": list_courses_udemy}
 
 
-@app.post("/recommend_related_courses_udacity/")
-def recommendation_udacity(perfil: UserProfile, id_course: int, contexto: Optional[UserContext], k: Optional[int] = 10):
+@app.post("/courses/udacity/{id_course}/related")
+def recommendation_related_courses_udacity(perfil: UserProfile, id_course: int, contexto: Optional[UserContext], k: Optional[int] = 10):
     curso_description = get_curso_udacity(id_course)["description"]
     list_recommendations = create_list_recommendations_udacity(perfil, contexto, k, curso_description)
     return {'list_recommendations': list_recommendations}
 
 
-@app.post("/recommend_related_courses_coursera/")
-def recommendation_coursera(perfil: UserProfile, id_course: int, contexto: Optional[UserContext], k: Optional[int] = 10):
+@app.post("/courses/coursera/{id_course}/related")
+def recommendation_related_courses_coursera(perfil: UserProfile, id_course: int, contexto: Optional[UserContext], k: Optional[int] = 10):
     curso_description = get_curso_coursera(id_course)["description"]
     list_recommendations = create_list_recommendations_coursera(perfil, contexto, k, curso_description)
     return {'list_recommendations': list_recommendations}
 
 
-@app.post("/recommend_related_courses_udemy/")
-def recommendation_udemy(perfil: UserProfile, id_course: int, contexto: Optional[UserContext], k: Optional[int] = 10):
+@app.post("/courses/udemy/{id_course}/related")
+def recommendation_related_courses_udemy(perfil: UserProfile, id_course: int, contexto: Optional[UserContext], k: Optional[int] = 10):
     curso_description = get_curso_udemy(id_course)["description"]
     curso_description_extend = get_curso_udemy(id_course)["description"]
     curso_description = curso_description + curso_description_extend
@@ -88,26 +88,26 @@ def recommendation_udemy(perfil: UserProfile, id_course: int, contexto: Optional
     return {'list_recommendations': list_recommendations}
 
 
-@app.post("/recommend_related_query_udacity/")
-def recommendation_udacity(perfil: UserProfile, query:str, contexto: Optional[UserContext], k: Optional[int] = 10):
+@app.post("/courses/udacity/recommend/query")
+def recommendation_query_udacity(perfil: UserProfile, query:str, contexto: Optional[UserContext], k: Optional[int] = 10):
     list_recommendations = create_list_recommendations_udacity(perfil, contexto, k, query)
     return {'list_recommendations': list_recommendations}
 
 
-@app.post("/recommend_related_query_coursera/")
-def recommendation_coursera(perfil: UserProfile, query:str, contexto: Optional[UserContext], k: Optional[int] = 10):
+@app.post("/courses/coursera/recommend/query")
+def recommendation_query_coursera(perfil: UserProfile, query:str, contexto: Optional[UserContext], k: Optional[int] = 10):
     list_recommendations = create_list_recommendations_coursera(perfil, contexto, k, query)
     return {'list_recommendations': list_recommendations}
 
 
-@app.post("/recommend_related_query_udemy/")
-def recommendation_udemy(perfil: UserProfile, query:str, contexto: Optional[UserContext], k: Optional[int] = 10):
+@app.post("/courses/udemy/recommend/query")
+def recommendation_query_udemy(perfil: UserProfile, query:str, contexto: Optional[UserContext], k: Optional[int] = 10):
     list_recommendations = create_list_recommendations_udemy(perfil, contexto, k, query)
     return {'list_recommendations': list_recommendations}
 
 
-@app.post("/recommend_related_query_global/")
-def recommendation_udemy(perfil: UserProfile, query:str, contexto: Optional[UserContext], k: Optional[int] = 10):
+@app.post("/courses/global/recommend/query")
+def recommendation_query_global(perfil: UserProfile, query:str, contexto: Optional[UserContext], k: Optional[int] = 10):
     list_courses_coursera = create_list_recommendations_coursera(perfil, contexto, k, query)
     list_courses_udemy = create_list_recommendations_udemy(perfil, contexto, k, query)
     list_courses_udacity = create_list_recommendations_udacity(perfil, contexto, k, query)
@@ -116,11 +116,7 @@ def recommendation_udemy(perfil: UserProfile, query:str, contexto: Optional[User
 
 @app.post("/explore/")
 def explore_courses(perfil: UserProfile, contexto: Optional[UserContext], k: Optional[int] = 10):
-    print("Hola")
     list_courses_udacity = explore_courses_udacity(perfil, contexto, k)
-    print("A")
     list_courses_coursera = explore_courses_coursera(perfil, contexto, k)
-    print("B")
     list_courses_udemy = explore_courses_udemy(perfil, contexto, k)
-    print("C")
     return {"courses_udacity": list_courses_udacity, "courses_coursera": list_courses_coursera, "courses_udemy": list_courses_udemy}
