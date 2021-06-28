@@ -14,12 +14,6 @@ def create_pipeline(**kwargs):
                 name="preprocessing_udacity",
             ),
             node(
-                lambda x: x,
-                inputs="preprocessed_udacity",
-                outputs="pre_report_udacity",
-                name="report_udacity",
-            ),
-            node(
                 func=feature_cleaning_udacity,
                 inputs="preprocessed_udacity",
                 outputs="cleaned_udacity",
@@ -48,12 +42,6 @@ def create_pipeline(**kwargs):
                 inputs="coursera_scrapped",
                 outputs="preprocessed_coursera",
                 name="preprocessing_coursera",
-            ),
-            node(
-                lambda x: x,
-                inputs="preprocessed_coursera",
-                outputs="pre_report_coursera",
-                name="report_coursera",
             ),
             node(
                 func=feature_cleaning_coursera,
@@ -101,13 +89,13 @@ def create_pipeline(**kwargs):
                 func=f_engineering_categorical_features_udemy,
                 inputs="categorical_data_udemy",
                 outputs="categorical_features_udemy",
-                name="categorical_features_udemy",
+                name="f_engineering_categorical_features_udemy",
             ),
             node(
                 func=f_engineering_numerical_features_udemy,
                 inputs="numerical_data_udemy",
                 outputs="numerical_features_udemy",
-                name="numerical_features_udemy",
+                name="f_engineering_numerical_features_udemy",
             ),
         ]
     )
