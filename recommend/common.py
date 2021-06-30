@@ -24,15 +24,19 @@ df_ud = pd.read_csv("datasets/cleaned_udacity.csv")
 df_cou = pd.read_csv("datasets/cleaned_coursera.csv")
 df_ude = pd.read_csv("datasets/cleaned_udemy.csv")
 
-df_cl_ud = pd.read_csv("model_output/clustering_output_udacity.csv")
-df_cl_cou = pd.read_csv("model_output/clustering_output_coursera.csv")
-df_cl_ude = pd.read_csv("model_output/clustering_output_udemy.csv")
+df_cl_ud = pd.read_csv("datasets/model_output/clustering_output_udacity.csv")
+df_cl_cou = pd.read_csv("datasets/model_output/clustering_output_coursera.csv")
+df_cl_ude = pd.read_csv("datasets/model_output/clustering_output_udemy.csv")
 
-
-def filtrar_cursos_coursera(cursos_candidatos, contexto):
+def filter_courses(cursos_candidatos, contexto, proveedor):
     resultado = []
     for candidato_id, score in cursos_candidatos:
-        curso_candidato = get_curso_coursera(candidato_id)
+        if proveedor == "coursera":
+            curso_candidato = get_curso_coursera(candidato_id)
+        elif proveedor == "udemy":
+            curso_candidato = get_curso_udemy(candidato_id)
+        else:
+            curso_candidato = get_curso_udacity(candidato_id)
         idioma_correcto = curso_candidato.language in contexto.language_list
         nuevo_contenido = candidato_id not in contexto.discarded_courses
         if idioma_correcto and nuevo_contenido:
@@ -40,30 +44,17 @@ def filtrar_cursos_coursera(cursos_candidatos, contexto):
     return resultado
 
 
-
-def filtrar_cursos_udemy(cursos_candidatos, contexto):
-    resultado = []
-    for candidato_id, score in cursos_candidatos:
-        curso_candidato = get_curso_udemy(candidato_id)
-        idioma_correcto = curso_candidato.language in contexto.language_list
-        nuevo_contenido = candidato_id not in contexto.discarded_courses
-        if idioma_correcto and nuevo_contenido:
-            resultado.append((candidato_id, score))
-    return resultado
-
-
-def calcular_similitud_features_udacity(usuario_embedding, curso_id):
+def compute_distance_udacity(usuario_embedding, curso_id):
     curso = df_cl_ud.iloc[curso_id]
     rating = curso['rating']
     if (np.isnan(rating)):
         rating = 0
     curso_embedding = [curso['difficulty'], curso['duration'], curso['n_reviews'], rating, curso['free']]
     cos_sim = dot(curso_embedding, usuario_embedding) / (norm(curso_embedding) * norm(usuario_embedding))
-    print(cos_sim)
     return cos_sim
 
 
-def calcular_similitud_features_coursera(usuario_embedding, curso_id):
+def compute_distance_coursera(usuario_embedding, curso_id):
     curso = df_cl_cou.iloc[curso_id]
     rating = curso['rating']
     if (np.isnan(rating)):
@@ -73,31 +64,40 @@ def calcular_similitud_features_coursera(usuario_embedding, curso_id):
     return cos_sim
 
 
-def calcular_similitud_features_udemy(usuario_embedding, curso_id):
+def compute_distance_udemy(usuario_embedding, curso_id):
     curso = df_cl_ude.iloc[curso_id]
-    rating = curso['rating']
-    if (np.isnan(rating)):
-        rating = 0
     curso_embedding = [curso['cost'], curso['n_students'], curso['rating'], curso['hours']]
     cos_sim = dot(curso_embedding, usuario_embedding) / (norm(curso_embedding) * norm(usuario_embedding))
     return cos_sim
 
 
-def calcular_similitud_contenido_udacity(perfil_description, curso_description):
+def content_similarity_udacity(perfil_description, curso_description):
+    if pd.isna(curso_description):
+        curso_description = ""
+    if pd.isna(perfil_description):
+        perfil_description = ""
     usuario_embedding = model_udacity.encode(perfil_description, convert_to_tensor=True)
     curso_embedding = model_udacity.encode(curso_description, convert_to_tensor=True)
     cos_score = util.pytorch_cos_sim(usuario_embedding, curso_embedding)[0]
     return cos_score
 
 
-def calcular_similitud_contenido_coursera(perfil_description, curso_description):
+def content_similarity_coursera(perfil_description, curso_description):
+    if pd.isna(curso_description):
+        curso_description = ""
+    if pd.isna(perfil_description):
+        perfil_description = ""
     usuario_embedding = model_coursera.encode(perfil_description, convert_to_tensor=True)
     curso_embedding = model_coursera.encode(curso_description, convert_to_tensor=True)
     cos_score = util.pytorch_cos_sim(usuario_embedding, curso_embedding)[0]
     return cos_score
 
 
-def calcular_similitud_contenido_udemy(perfil_description, curso_description):
+def content_similarity_udemy(perfil_description, curso_description):
+    if pd.isna(curso_description):
+        curso_description = ""
+    if pd.isna(perfil_description):
+        perfil_description = ""
     usuario_embedding = model_udemy.encode(perfil_description, convert_to_tensor=True)
     curso_embedding = model_udemy.encode(curso_description, convert_to_tensor=True)
     cos_score = util.pytorch_cos_sim(usuario_embedding, curso_embedding)[0]

@@ -57,34 +57,30 @@ def clustering_coursera(df: pd.DataFrame, data: pd.DataFrame):
     arbitrary_imputer.fit(df)
     # transform the data
     df = arbitrary_imputer.transform(df)
-    clusterer = hdbscan.HDBSCAN(min_samples=10, min_cluster_size=100, prediction_data=True)
-    cluster_labels = clusterer.fit_predict(df)
+    clustering_model = hdbscan.HDBSCAN(min_samples=10, min_cluster_size=100, prediction_data=True)
+    cluster_labels = clustering_model.fit_predict(df)
     df['Label'] = cluster_labels
     data['Label'] = cluster_labels
-    return [df, data, clusterer]
+    return [df, data, clustering_model]
 
 
 def clustering_udemy(df: pd.DataFrame, data: pd.DataFrame):
-    clusterer = hdbscan.HDBSCAN(min_samples=1, min_cluster_size=500, prediction_data=True)
-    cluster_labels = clusterer.fit_predict(df)
+    clustering_model = hdbscan.HDBSCAN(min_samples=1, min_cluster_size=500, prediction_data=True)
+    cluster_labels = clustering_model.fit_predict(df)
     df['Label'] = cluster_labels
     data['Label'] = cluster_labels
-    return [df, data, clusterer]
+    return [df, data, clustering_model]
 
 
 def generate_embeddings_udacity(df: pd.DataFrame):
     df['description'] = df.description.replace(np.nan, '', regex=True)
-    # borrar columnas innecesarias
     result = [x + '. ' + y for x, y in zip(df['title'], df['description'])]
-    # We then load the allenai-specter model with SentenceTransformers
     model = SentenceTransformer('allenai-specter')
     corpus_embeddings = model.encode(result, convert_to_tensor=True)
     return [corpus_embeddings, model]
 
 
 def generate_embeddings_coursera(df: pd.DataFrame):
-    df['description'] = df.description.replace(np.nan, '', regex=True)
-    df['title'] = df.title.replace(np.nan, '', regex=True)
     model = SentenceTransformer('distiluse-base-multilingual-cased-v2')
     result = [x + '. ' + y for x, y in zip(df['title'], df['description'])]
     corpus_embeddings = model.encode(result, convert_to_tensor=True)
@@ -92,9 +88,6 @@ def generate_embeddings_coursera(df: pd.DataFrame):
 
 
 def generate_embeddings_udemy(df: pd.DataFrame):
-    df['description'] = df.description.replace(np.nan, '', regex=True)
-    df['title'] = df.title.replace(np.nan, '', regex=True)
-    df['description_extend'] = df.description_extend.replace(np.nan, '', regex=True)
     model = SentenceTransformer('distiluse-base-multilingual-cased-v2')
     result = [x + '. ' + y + '. ' + z for x, y, z in zip(df['title'], df['description'], df['description_extend'])]
     corpus_embeddings = model.encode(result, convert_to_tensor=True)

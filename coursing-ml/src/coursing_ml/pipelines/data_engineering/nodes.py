@@ -223,10 +223,9 @@ def feature_cleaning_coursera(df: pd.DataFrame) -> pd.DataFrame:
     missingdata_imputer = DropMissingData(variables=['subcategory'])
     missingdata_imputer.fit(df)
     df = missingdata_imputer.transform(df)
-    # description
-    imputer = CategoricalImputer(variables=['description'], fill_value='')
-    imputer.fit(df)
-    df = imputer.transform(df)
+    # arbitrary value imputation
+    df["description"].fillna("", inplace=True)
+    df["title"].fillna("", inplace=True)
     # enrolled
     arbitrary_imputer = ArbitraryNumberImputer(arbitrary_number=0, variables=['enrolled'])
     arbitrary_imputer.fit(df)
@@ -306,6 +305,8 @@ def feature_selection_udemy(df: pd.DataFrame):
 
 
 def f_engineering_categorical_features_udacity(df: pd.DataFrame) -> pd.DataFrame:
+    df['title'] = df['title'].str.lower()
+    df['description'] = df['description'].str.lower()
     return df
 
 
@@ -334,6 +335,8 @@ def f_engineering_numerical_features_udacity(df: pd.DataFrame) -> pd.DataFrame:
 
 
 def f_engineering_categorical_features_coursera(df: pd.DataFrame) -> pd.DataFrame:
+    df['title'] = df['title'].str.lower()
+    df['description'] = df['description'].str.lower()
     return df
 
 def f_engineering_numerical_features_coursera(df: pd.DataFrame) -> pd.DataFrame:
@@ -364,6 +367,9 @@ def f_engineering_numerical_features_coursera(df: pd.DataFrame) -> pd.DataFrame:
     return df
 
 def f_engineering_categorical_features_udemy(df: pd.DataFrame) -> pd.DataFrame:
+    df['title'] = df['title'].str.lower()
+    df['description'] = df['description'].str.lower()
+    df['description_extend'] = df['description_extend'].str.lower()
     return df
 
 def f_engineering_numerical_features_udemy(df: pd.DataFrame) -> pd.DataFrame:

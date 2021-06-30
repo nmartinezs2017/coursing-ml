@@ -9,9 +9,9 @@ df_ud = pd.read_csv("datasets/cleaned_udacity.csv")
 df_cou = pd.read_csv("datasets/cleaned_coursera.csv")
 df_ude = pd.read_csv("datasets/cleaned_udemy.csv")
 
-corpus_embeddings_udacity = pd.read_pickle("model_output/corpus_embeddings_udacity.pkl")
-corpus_embeddings_coursera = pd.read_pickle("model_output/corpus_embeddings_coursera.pkl")
-corpus_embeddings_udemy = pd.read_pickle("model_output/corpus_embeddings_udemy.pkl")
+corpus_embeddings_udacity = pd.read_pickle("datasets/model_output/corpus_embeddings_udacity.pkl")
+corpus_embeddings_coursera = pd.read_pickle("datasets/model_output/corpus_embeddings_coursera.pkl")
+corpus_embeddings_udemy = pd.read_pickle("datasets/model_output/corpus_embeddings_udemy.pkl")
 
 
 def query_to_embedding(name_model, query):
@@ -24,7 +24,7 @@ def query_to_embedding(name_model, query):
     return embedding
 
 
-def top_k_retrieval(name_model, query_embedding, k = 10):
+def take_top_k(name_model, query_embedding, k = 10):
     if (name_model == 'udacity'):
         search_hits = util.semantic_search(query_embedding, corpus_embeddings_udacity, top_k=k)[0]
     elif (name_model == 'coursera'):
@@ -49,7 +49,7 @@ def result_ranking(top_k, contexto, df):
 def search_courses_udacity(query, contexto, k=10):
     query_embedding = query_to_embedding("udacity", query)
     len_context = len(contexto.discarded_courses)
-    top_k = top_k_retrieval("udacity", query_embedding, k+len_context)
+    top_k = take_top_k("udacity", query_embedding, k)
     results = result_ranking(top_k, contexto, df_ud)
     return results
 
@@ -57,7 +57,7 @@ def search_courses_udacity(query, contexto, k=10):
 def search_courses_coursera(query, contexto, k=10):
     query_embedding = query_to_embedding("coursera", query)
     len_context = len(contexto.discarded_courses)
-    top_k = top_k_retrieval("coursera", query_embedding, k+len_context)
+    top_k = take_top_k("coursera", query_embedding, k)
     results = result_ranking(top_k, contexto, df_cou)
     return results
 
@@ -66,7 +66,7 @@ def search_courses_udemy(query, contexto, k=10):
     query_embedding = query_to_embedding("udemy", query)
     len_context = len(contexto.discarded_courses)
 
-    top_k = top_k_retrieval("udemy", query_embedding, k+len_context)
+    top_k = take_top_k("udemy", query_embedding, k)
 
     results = result_ranking(top_k, contexto, df_ude)
     return results

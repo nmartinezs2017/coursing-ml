@@ -20,9 +20,9 @@ df_ud = pd.read_csv("datasets/cleaned_udacity.csv")
 df_cou = pd.read_csv("datasets/cleaned_coursera.csv")
 df_ude = pd.read_csv("datasets/cleaned_udemy.csv")
 
-df_cl_ud = pd.read_csv("model_output/clustering_output_udacity.csv")
-df_cl_cou = pd.read_csv("model_output/clustering_output_coursera.csv")
-df_cl_ude = pd.read_csv("model_output/clustering_output_udemy.csv")
+df_cl_ud = pd.read_csv("datasets/model_output/clustering_output_udacity.csv")
+df_cl_cou = pd.read_csv("datasets/model_output/clustering_output_coursera.csv")
+df_cl_ude = pd.read_csv("datasets/model_output/clustering_output_udemy.csv")
 
 
 def explore_courses_udacity(perfil, contexto, k):
@@ -36,8 +36,10 @@ def explore_courses_udacity(perfil, contexto, k):
     for id_course in list_id_courses:
         curso = get_curso_udacity(int(id_course))
         if (not pd.isnull(curso.description)):
-            cos_sim = calcular_similitud_contenido_udacity(perfil.description, curso.description)
+            cos_sim = content_similarity_udacity(perfil.description, curso.description)
             cursos_candidatos.append((id_course, cos_sim))
+    # filtrar
+    cursos_filtrados = filter_courses(cursos_candidatos, contexto, "udacity")
     # ordenar
     cursos_candidatos.sort(key=lambda x: x[1])
     # devolver los k primeros
@@ -63,10 +65,10 @@ def explore_courses_coursera(perfil, contexto, k):
     for id_course in list_id_courses:
         curso = get_curso_coursera(int(id_course))
         if (not pd.isnull(curso.description)):
-            cos_sim = calcular_similitud_contenido_coursera(perfil.description, curso.description)
+            cos_sim = content_similarity_coursera(perfil.description, curso.description)
             cursos_candidatos.append((id_course, cos_sim))
     # filtrar
-    cursos_filtrados = filtrar_cursos_coursera(cursos_candidatos, contexto)
+    cursos_filtrados = filter_courses(cursos_candidatos, contexto, "coursera")
     # ordenar
     cursos_filtrados.sort(key=lambda x: x[1])
     # devolver los k primeros
@@ -93,12 +95,10 @@ def explore_courses_udemy(perfil, contexto, k):
         curso = get_curso_udemy(int(id_course))
         curso_descripcion = curso.description + ". " + curso.description_extend
         if (not pd.isnull(curso.description)):
-            cos_sim = calcular_similitud_contenido_udemy(perfil.description, curso_descripcion)
+            cos_sim = content_similarity_udemy(perfil.description, curso_descripcion)
             cursos_candidatos.append((id_course, cos_sim))
     # filtrar
-    print(cursos_candidatos)
-    cursos_filtrados = filtrar_cursos_udemy(cursos_candidatos, contexto)
-    print(cursos_filtrados)
+    cursos_filtrados = filter_courses(cursos_candidatos, contexto, "udemy")
     # ordenar
     cursos_filtrados.sort(key=lambda x: x[1])
     # devolver los k primeros
