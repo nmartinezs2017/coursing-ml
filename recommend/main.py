@@ -67,25 +67,33 @@ def recommendation_global(perfil: UserProfile, contexto: Optional[UserContext], 
 
 @app.post("/courses/udacity/{id_course}/related")
 def recommendation_related_courses_udacity(perfil: UserProfile, id_course: int, contexto: Optional[UserContext], k: Optional[int] = 10):
-    curso_description = get_curso_udacity(id_course)["description"]
-    list_recommendations = create_list_recommendations_udacity(perfil, contexto, k, curso_description)
-    return {'list_recommendations': list_recommendations}
+    course_description = get_curso_udacity(id_course)["description"]
+    list_courses_coursera = create_list_recommendations_coursera(perfil, contexto, k, course_description)
+    list_courses_udemy = create_list_recommendations_udemy(perfil, contexto, k, course_description)
+    list_courses_udacity = create_list_recommendations_udacity(perfil, contexto, k, course_description)
+    return {"courses_udacity": list_courses_udacity, "courses_coursera": list_courses_coursera, "courses_udemy": list_courses_udemy}
+
 
 
 @app.post("/courses/coursera/{id_course}/related")
 def recommendation_related_courses_coursera(perfil: UserProfile, id_course: int, contexto: Optional[UserContext], k: Optional[int] = 10):
-    curso_description = get_curso_coursera(id_course)["description"]
-    list_recommendations = create_list_recommendations_coursera(perfil, contexto, k, curso_description)
-    return {'list_recommendations': list_recommendations}
+    course_description = get_curso_coursera(id_course)["description"]
+    list_courses_coursera = create_list_recommendations_coursera(perfil, contexto, k, course_description)
+    list_courses_udemy = create_list_recommendations_udemy(perfil, contexto, k, course_description)
+    list_courses_udacity = create_list_recommendations_udacity(perfil, contexto, k, course_description)
+    return {"courses_udacity": list_courses_udacity, "courses_coursera": list_courses_coursera, "courses_udemy": list_courses_udemy}
 
 
 @app.post("/courses/udemy/{id_course}/related")
 def recommendation_related_courses_udemy(perfil: UserProfile, id_course: int, contexto: Optional[UserContext], k: Optional[int] = 10):
     curso_description = get_curso_udemy(id_course)["description"]
     curso_description_extend = get_curso_udemy(id_course)["description"]
-    curso_description = curso_description + curso_description_extend
-    list_recommendations = create_list_recommendations_udemy(perfil, contexto, k, curso_description)
-    return {'list_recommendations': list_recommendations}
+    course_description = curso_description + curso_description_extend
+    list_courses_coursera = create_list_recommendations_coursera(perfil, contexto, k, course_description)
+    list_courses_udemy = create_list_recommendations_udemy(perfil, contexto, k, course_description)
+    list_courses_udacity = create_list_recommendations_udacity(perfil, contexto, k, course_description)
+    return {"courses_udacity": list_courses_udacity, "courses_coursera": list_courses_coursera, "courses_udemy": list_courses_udemy}
+
 
 
 @app.post("/courses/udacity/recommend/query")

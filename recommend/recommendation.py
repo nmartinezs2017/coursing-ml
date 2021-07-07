@@ -45,7 +45,7 @@ def choose_recommendations_udacity(candidatos_ids, vector_usuario, contexto, des
     candidatos_filtrados = filter_courses(cursos_ordenados, contexto, "udacity")
     c_f_indice = 0
     while(indice < k) and (c_f_indice < len(candidatos_filtrados)):
-        c_f_id = cursos_ordenados[c_f_indice][0]
+        c_f_id = candidatos_filtrados[c_f_indice][0]
         related_course = df_ud.iloc[int(c_f_id)]
         # score = content_similarity_udacity(description,related_course['description'])
         resultados[str(c_f_id)] = {'title': related_course['title'], 'url': related_course['url']}
@@ -105,7 +105,7 @@ def choose_recommendations_udemy(candidatos_ids, vector_usuario, contexto, descr
 
 def create_list_recommendations_udacity(perfil, contexto, k, query = ""):
     # buscar cursos que por contenido puedan interesar al usuario
-    query_embedding = model_udacity.encode(perfil.description + query, convert_to_tensor=True)
+    query_embedding = model_udacity.encode(perfil.description + " " + query, convert_to_tensor=True)
     search_hits = util.semantic_search(query_embedding, corpus_embeddings_udacity, top_k=30)
     search_hits = search_hits[0]
     list_ids = []
@@ -120,7 +120,7 @@ def create_list_recommendations_udacity(perfil, contexto, k, query = ""):
 
 def create_list_recommendations_coursera(perfil, contexto, k, query = ""):
     # buscar cursos que por contenido puedan interesar al usuario
-    query_embedding = model_coursera.encode(perfil.description + query, convert_to_tensor=True)
+    query_embedding = model_coursera.encode(perfil.description + " " + query, convert_to_tensor=True)
     search_hits = util.semantic_search(query_embedding, corpus_embeddings_coursera, top_k=k*5)
     search_hits = search_hits[0]
     list_ids = []
@@ -135,13 +135,12 @@ def create_list_recommendations_coursera(perfil, contexto, k, query = ""):
 
 def create_list_recommendations_udemy(perfil, contexto, k, query = ""):
     # buscar cursos que por contenido puedan interesar al usuario
-    query_embedding = model_udemy.encode(perfil.description + query, convert_to_tensor=True)
+    query_embedding = model_udemy.encode(perfil.description + " " + query, convert_to_tensor=True)
     search_hits = util.semantic_search(query_embedding, corpus_embeddings_udemy, top_k=k*5)
     search_hits = search_hits[0]
     list_ids = []
     for hit in search_hits:
         list_ids.append(hit['corpus_id'])
-
 
     # predecir el cluster del user a partir de sus características
     user_embedding = convertir_datos_en_features_udemy(perfil)

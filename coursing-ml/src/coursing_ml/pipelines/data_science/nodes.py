@@ -81,6 +81,8 @@ def generate_embeddings_udacity(df: pd.DataFrame):
 
 
 def generate_embeddings_coursera(df: pd.DataFrame):
+    df['description'] = df.description.replace(np.nan, '', regex=True)
+    df['title'] = df.title.replace(np.nan, '', regex=True)
     model = SentenceTransformer('distiluse-base-multilingual-cased-v2')
     result = [x + '. ' + y for x, y in zip(df['title'], df['description'])]
     corpus_embeddings = model.encode(result, convert_to_tensor=True)
@@ -88,6 +90,9 @@ def generate_embeddings_coursera(df: pd.DataFrame):
 
 
 def generate_embeddings_udemy(df: pd.DataFrame):
+    df['description'] = df.description.replace(np.nan, '', regex=True)
+    df['title'] = df.title.replace(np.nan, '', regex=True)
+    df['description_extend'] = df.description_extend.replace(np.nan, '', regex=True)
     model = SentenceTransformer('distiluse-base-multilingual-cased-v2')
     result = [x + '. ' + y + '. ' + z for x, y, z in zip(df['title'], df['description'], df['description_extend'])]
     corpus_embeddings = model.encode(result, convert_to_tensor=True)
