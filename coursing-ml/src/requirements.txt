@@ -48,7 +48,6 @@ pyzmq==20.0.0             # via jupyter-client
 regex==2020.11.13         # via nltk, sacremoses, transformers
 requests==2.25.0          # via cookiecutter, transformers
 sacremoses==0.0.45        # via transformers
-scipy==1.7.0              # via feature-engine, hdbscan, scikit-learn, sentence-transformers, statsmodels
 sentencepiece==0.1.96     # via sentence-transformers
 six==1.15.0               # via hdbscan, patsy, pip-tools, python-dateutil, sacremoses
 statsmodels==0.12.2       # via feature-engine
@@ -58,7 +57,6 @@ toposort==1.5             # via kedro
 torch==1.9.0              # via sentence-transformers
 tornado==4.2            # via jupyter-client
 tqdm==4.61.1              # via nltk, sacremoses, sentence-transformers, transformers
-traitlets==5.0.5          # via jupyter-client, jupyter-core
 typing-extensions==3.10.0.0  # via torch
 urllib3==1.26.2           # via requests
 whichcraft==0.6.1         # via cookiecutter
