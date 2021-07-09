@@ -1,0 +1,526 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>coursing_ml.pipelines.data_engineering package &mdash; coursing_ml 0.1 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/copybutton.css" type="text/css" />
+  <link rel="stylesheet" href="_static/C:\Users\enrmeao\PycharmProjects\coursing\venv\Lib\site-packages\kedro\framework\html\_static\css\copybutton.css" type="text/css" />
+  <link rel="stylesheet" href="_static/C:\Users\enrmeao\PycharmProjects\coursing\venv\Lib\site-packages\kedro\framework\html\_static\css\qb1-sphinx-rtd.css" type="text/css" />
+  <link rel="stylesheet" href="_static/C:\Users\enrmeao\PycharmProjects\coursing\venv\Lib\site-packages\kedro\framework\html\_static\css\theme-overrides.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="coursing_ml.pipelines.data_science package" href="coursing_ml.pipelines.data_science.html" />
+    <link rel="prev" title="coursing_ml.pipelines package" href="coursing_ml.pipelines.html" /> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="index.html" class="icon icon-home"> coursing_ml
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">coursing_ml</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="coursing_ml.html">coursing_ml package</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="coursing_ml.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l4 current"><a class="reference internal" href="coursing_ml.pipelines.html">coursing_ml.pipelines package</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="coursing_ml.html#submodules">Submodules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="coursing_ml.html#module-coursing_ml.hooks">coursing_ml.hooks module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="coursing_ml.html#module-coursing_ml.io">coursing_ml.io module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="coursing_ml.html#module-coursing_ml.run">coursing_ml.run module</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">coursing_ml</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content style-external-links">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="modules.html">coursing_ml</a> &raquo;</li>
+        
+          <li><a href="coursing_ml.html">coursing_ml package</a> &raquo;</li>
+        
+          <li><a href="coursing_ml.pipelines.html">coursing_ml.pipelines package</a> &raquo;</li>
+        
+      <li>coursing_ml.pipelines.data_engineering package</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  
+<style>
+/* CSS overrides for sphinx_rtd_theme */
+
+/* 24px margin */
+.nbinput.nblast,
+.nboutput.nblast {
+    margin-bottom: 19px;  /* padding has already 5px */
+}
+
+/* ... except between code cells! */
+.nblast + .nbinput {
+    margin-top: -19px;
+}
+
+.admonition > p:before {
+    margin-right: 4px;  /* make room for the exclamation icon */
+}
+</style>
+<div class="section" id="module-coursing_ml.pipelines.data_engineering">
+<span id="coursing-ml-pipelines-data-engineering-package"></span><h1>coursing_ml.pipelines.data_engineering package<a class="headerlink" href="#module-coursing_ml.pipelines.data_engineering" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-coursing_ml.pipelines.data_engineering.nodes">
+<span id="coursing-ml-pipelines-data-engineering-nodes-module"></span><h2>coursing_ml.pipelines.data_engineering.nodes module<a class="headerlink" href="#module-coursing_ml.pipelines.data_engineering.nodes" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="coursing_ml.pipelines.data_engineering.nodes.convert_enrolled_coursera">
+<code class="descclassname">coursing_ml.pipelines.data_engineering.nodes.</code><code class="descname">convert_enrolled_coursera</code><span class="sig-paren">(</span><em>x</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/coursing_ml/pipelines/data_engineering/nodes.html#convert_enrolled_coursera"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#coursing_ml.pipelines.data_engineering.nodes.convert_enrolled_coursera" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="coursing_ml.pipelines.data_engineering.nodes.convert_ratings_coursera">
+<code class="descclassname">coursing_ml.pipelines.data_engineering.nodes.</code><code class="descname">convert_ratings_coursera</code><span class="sig-paren">(</span><em>x</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/coursing_ml/pipelines/data_engineering/nodes.html#convert_ratings_coursera"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#coursing_ml.pipelines.data_engineering.nodes.convert_ratings_coursera" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="coursing_ml.pipelines.data_engineering.nodes.convert_views_coursera">
+<code class="descclassname">coursing_ml.pipelines.data_engineering.nodes.</code><code class="descname">convert_views_coursera</code><span class="sig-paren">(</span><em>x</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/coursing_ml/pipelines/data_engineering/nodes.html#convert_views_coursera"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#coursing_ml.pipelines.data_engineering.nodes.convert_views_coursera" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="coursing_ml.pipelines.data_engineering.nodes.extract_duration_hours">
+<code class="descclassname">coursing_ml.pipelines.data_engineering.nodes.</code><code class="descname">extract_duration_hours</code><span class="sig-paren">(</span><em>x</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/coursing_ml/pipelines/data_engineering/nodes.html#extract_duration_hours"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#coursing_ml.pipelines.data_engineering.nodes.extract_duration_hours" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="coursing_ml.pipelines.data_engineering.nodes.extract_hours_per_week_coursera">
+<code class="descclassname">coursing_ml.pipelines.data_engineering.nodes.</code><code class="descname">extract_hours_per_week_coursera</code><span class="sig-paren">(</span><em>x</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/coursing_ml/pipelines/data_engineering/nodes.html#extract_hours_per_week_coursera"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#coursing_ml.pipelines.data_engineering.nodes.extract_hours_per_week_coursera" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="coursing_ml.pipelines.data_engineering.nodes.extract_hours_udemy">
+<code class="descclassname">coursing_ml.pipelines.data_engineering.nodes.</code><code class="descname">extract_hours_udemy</code><span class="sig-paren">(</span><em>x</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/coursing_ml/pipelines/data_engineering/nodes.html#extract_hours_udemy"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#coursing_ml.pipelines.data_engineering.nodes.extract_hours_udemy" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="coursing_ml.pipelines.data_engineering.nodes.extract_months_hours_coursera">
+<code class="descclassname">coursing_ml.pipelines.data_engineering.nodes.</code><code class="descname">extract_months_hours_coursera</code><span class="sig-paren">(</span><em>x</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/coursing_ml/pipelines/data_engineering/nodes.html#extract_months_hours_coursera"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#coursing_ml.pipelines.data_engineering.nodes.extract_months_hours_coursera" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="coursing_ml.pipelines.data_engineering.nodes.extract_n_element">
+<code class="descclassname">coursing_ml.pipelines.data_engineering.nodes.</code><code class="descname">extract_n_element</code><span class="sig-paren">(</span><em>x</em>, <em>n</em>, <em>separator=' '</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/coursing_ml/pipelines/data_engineering/nodes.html#extract_n_element"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#coursing_ml.pipelines.data_engineering.nodes.extract_n_element" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="coursing_ml.pipelines.data_engineering.nodes.extract_number_hours">
+<code class="descclassname">coursing_ml.pipelines.data_engineering.nodes.</code><code class="descname">extract_number_hours</code><span class="sig-paren">(</span><em>x</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/coursing_ml/pipelines/data_engineering/nodes.html#extract_number_hours"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#coursing_ml.pipelines.data_engineering.nodes.extract_number_hours" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="coursing_ml.pipelines.data_engineering.nodes.extract_time_range">
+<code class="descclassname">coursing_ml.pipelines.data_engineering.nodes.</code><code class="descname">extract_time_range</code><span class="sig-paren">(</span><em>x</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/coursing_ml/pipelines/data_engineering/nodes.html#extract_time_range"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#coursing_ml.pipelines.data_engineering.nodes.extract_time_range" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="coursing_ml.pipelines.data_engineering.nodes.f_engineering_categorical_features_coursera">
+<code class="descclassname">coursing_ml.pipelines.data_engineering.nodes.</code><code class="descname">f_engineering_categorical_features_coursera</code><span class="sig-paren">(</span><em>df</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/coursing_ml/pipelines/data_engineering/nodes.html#f_engineering_categorical_features_coursera"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#coursing_ml.pipelines.data_engineering.nodes.f_engineering_categorical_features_coursera" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="coursing_ml.pipelines.data_engineering.nodes.f_engineering_categorical_features_udacity">
+<code class="descclassname">coursing_ml.pipelines.data_engineering.nodes.</code><code class="descname">f_engineering_categorical_features_udacity</code><span class="sig-paren">(</span><em>df</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/coursing_ml/pipelines/data_engineering/nodes.html#f_engineering_categorical_features_udacity"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#coursing_ml.pipelines.data_engineering.nodes.f_engineering_categorical_features_udacity" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="coursing_ml.pipelines.data_engineering.nodes.f_engineering_categorical_features_udemy">
+<code class="descclassname">coursing_ml.pipelines.data_engineering.nodes.</code><code class="descname">f_engineering_categorical_features_udemy</code><span class="sig-paren">(</span><em>df</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/coursing_ml/pipelines/data_engineering/nodes.html#f_engineering_categorical_features_udemy"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#coursing_ml.pipelines.data_engineering.nodes.f_engineering_categorical_features_udemy" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="coursing_ml.pipelines.data_engineering.nodes.f_engineering_numerical_features_coursera">
+<code class="descclassname">coursing_ml.pipelines.data_engineering.nodes.</code><code class="descname">f_engineering_numerical_features_coursera</code><span class="sig-paren">(</span><em>df</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/coursing_ml/pipelines/data_engineering/nodes.html#f_engineering_numerical_features_coursera"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#coursing_ml.pipelines.data_engineering.nodes.f_engineering_numerical_features_coursera" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="coursing_ml.pipelines.data_engineering.nodes.f_engineering_numerical_features_udacity">
+<code class="descclassname">coursing_ml.pipelines.data_engineering.nodes.</code><code class="descname">f_engineering_numerical_features_udacity</code><span class="sig-paren">(</span><em>df</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/coursing_ml/pipelines/data_engineering/nodes.html#f_engineering_numerical_features_udacity"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#coursing_ml.pipelines.data_engineering.nodes.f_engineering_numerical_features_udacity" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="coursing_ml.pipelines.data_engineering.nodes.f_engineering_numerical_features_udemy">
+<code class="descclassname">coursing_ml.pipelines.data_engineering.nodes.</code><code class="descname">f_engineering_numerical_features_udemy</code><span class="sig-paren">(</span><em>df</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/coursing_ml/pipelines/data_engineering/nodes.html#f_engineering_numerical_features_udemy"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#coursing_ml.pipelines.data_engineering.nodes.f_engineering_numerical_features_udemy" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="coursing_ml.pipelines.data_engineering.nodes.feature_cleaning_coursera">
+<code class="descclassname">coursing_ml.pipelines.data_engineering.nodes.</code><code class="descname">feature_cleaning_coursera</code><span class="sig-paren">(</span><em>df</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/coursing_ml/pipelines/data_engineering/nodes.html#feature_cleaning_coursera"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#coursing_ml.pipelines.data_engineering.nodes.feature_cleaning_coursera" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="coursing_ml.pipelines.data_engineering.nodes.feature_cleaning_udacity">
+<code class="descclassname">coursing_ml.pipelines.data_engineering.nodes.</code><code class="descname">feature_cleaning_udacity</code><span class="sig-paren">(</span><em>df</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/coursing_ml/pipelines/data_engineering/nodes.html#feature_cleaning_udacity"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#coursing_ml.pipelines.data_engineering.nodes.feature_cleaning_udacity" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="coursing_ml.pipelines.data_engineering.nodes.feature_cleaning_udemy">
+<code class="descclassname">coursing_ml.pipelines.data_engineering.nodes.</code><code class="descname">feature_cleaning_udemy</code><span class="sig-paren">(</span><em>df</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/coursing_ml/pipelines/data_engineering/nodes.html#feature_cleaning_udemy"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#coursing_ml.pipelines.data_engineering.nodes.feature_cleaning_udemy" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="coursing_ml.pipelines.data_engineering.nodes.feature_selection_coursera">
+<code class="descclassname">coursing_ml.pipelines.data_engineering.nodes.</code><code class="descname">feature_selection_coursera</code><span class="sig-paren">(</span><em>df</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/coursing_ml/pipelines/data_engineering/nodes.html#feature_selection_coursera"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#coursing_ml.pipelines.data_engineering.nodes.feature_selection_coursera" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="coursing_ml.pipelines.data_engineering.nodes.feature_selection_udacity">
+<code class="descclassname">coursing_ml.pipelines.data_engineering.nodes.</code><code class="descname">feature_selection_udacity</code><span class="sig-paren">(</span><em>df</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/coursing_ml/pipelines/data_engineering/nodes.html#feature_selection_udacity"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#coursing_ml.pipelines.data_engineering.nodes.feature_selection_udacity" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="coursing_ml.pipelines.data_engineering.nodes.feature_selection_udemy">
+<code class="descclassname">coursing_ml.pipelines.data_engineering.nodes.</code><code class="descname">feature_selection_udemy</code><span class="sig-paren">(</span><em>df</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/coursing_ml/pipelines/data_engineering/nodes.html#feature_selection_udemy"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#coursing_ml.pipelines.data_engineering.nodes.feature_selection_udemy" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="coursing_ml.pipelines.data_engineering.nodes.map_boolean_to_int">
+<code class="descclassname">coursing_ml.pipelines.data_engineering.nodes.</code><code class="descname">map_boolean_to_int</code><span class="sig-paren">(</span><em>df</em>, <em>field</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/coursing_ml/pipelines/data_engineering/nodes.html#map_boolean_to_int"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#coursing_ml.pipelines.data_engineering.nodes.map_boolean_to_int" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="coursing_ml.pipelines.data_engineering.nodes.preprocess_coursera">
+<code class="descclassname">coursing_ml.pipelines.data_engineering.nodes.</code><code class="descname">preprocess_coursera</code><span class="sig-paren">(</span><em>df</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/coursing_ml/pipelines/data_engineering/nodes.html#preprocess_coursera"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#coursing_ml.pipelines.data_engineering.nodes.preprocess_coursera" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="coursing_ml.pipelines.data_engineering.nodes.preprocess_udacity">
+<code class="descclassname">coursing_ml.pipelines.data_engineering.nodes.</code><code class="descname">preprocess_udacity</code><span class="sig-paren">(</span><em>df</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/coursing_ml/pipelines/data_engineering/nodes.html#preprocess_udacity"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#coursing_ml.pipelines.data_engineering.nodes.preprocess_udacity" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="coursing_ml.pipelines.data_engineering.nodes.preprocess_udemy">
+<code class="descclassname">coursing_ml.pipelines.data_engineering.nodes.</code><code class="descname">preprocess_udemy</code><span class="sig-paren">(</span><em>df</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/coursing_ml/pipelines/data_engineering/nodes.html#preprocess_udemy"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#coursing_ml.pipelines.data_engineering.nodes.preprocess_udemy" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="coursing_ml.pipelines.data_engineering.nodes.process_cost">
+<code class="descclassname">coursing_ml.pipelines.data_engineering.nodes.</code><code class="descname">process_cost</code><span class="sig-paren">(</span><em>x</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/coursing_ml/pipelines/data_engineering/nodes.html#process_cost"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#coursing_ml.pipelines.data_engineering.nodes.process_cost" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="coursing_ml.pipelines.data_engineering.nodes.process_difficulty_coursera">
+<code class="descclassname">coursing_ml.pipelines.data_engineering.nodes.</code><code class="descname">process_difficulty_coursera</code><span class="sig-paren">(</span><em>x</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/coursing_ml/pipelines/data_engineering/nodes.html#process_difficulty_coursera"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#coursing_ml.pipelines.data_engineering.nodes.process_difficulty_coursera" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="coursing_ml.pipelines.data_engineering.nodes.process_text">
+<code class="descclassname">coursing_ml.pipelines.data_engineering.nodes.</code><code class="descname">process_text</code><span class="sig-paren">(</span><em>x</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/coursing_ml/pipelines/data_engineering/nodes.html#process_text"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#coursing_ml.pipelines.data_engineering.nodes.process_text" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="module-coursing_ml.pipelines.data_engineering.pipeline">
+<span id="coursing-ml-pipelines-data-engineering-pipeline-module"></span><h2>coursing_ml.pipelines.data_engineering.pipeline module<a class="headerlink" href="#module-coursing_ml.pipelines.data_engineering.pipeline" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="coursing_ml.pipelines.data_engineering.pipeline.create_pipeline">
+<code class="descclassname">coursing_ml.pipelines.data_engineering.pipeline.</code><code class="descname">create_pipeline</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/coursing_ml/pipelines/data_engineering/pipeline.html#create_pipeline"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#coursing_ml.pipelines.data_engineering.pipeline.create_pipeline" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="coursing_ml.pipelines.data_science.html" class="btn btn-neutral float-right" title="coursing_ml.pipelines.data_science package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="coursing_ml.pipelines.html" class="btn btn-neutral" title="coursing_ml.pipelines package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2021, Noelia Martínez Sánchez.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'0.1',
+            LANGUAGE:'None',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+      <script type="text/javascript" src="_static/language_data.js"></script>
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.0/clipboard.min.js"></script>
+      <script type="text/javascript" src="_static/copybutton.js"></script>
+
+  
+
+  <script type="text/javascript" src="_static/js/theme.js"></script>
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

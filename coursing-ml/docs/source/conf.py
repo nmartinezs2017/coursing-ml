@@ -55,8 +55,8 @@ from coursing_ml import __version__ as release
 # -- Project information -----------------------------------------------------
 
 project = "coursing_ml"
-copyright = "2020, QuantumBlack Visual Analytics Limited"
-author = "QuantumBlack"
+copyright = "2021, Noelia Martínez Sánchez"
+author = "Noelia Martínez Sánchez"
 
 # The short X.Y version.
 version = re.match(r"^([0-9]+\.[0-9]+).*", release).group(1)
