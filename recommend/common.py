@@ -28,6 +28,7 @@ df_cl_ud = pd.read_csv("datasets/model_output/clustering_output_udacity.csv")
 df_cl_cou = pd.read_csv("datasets/model_output/clustering_output_coursera.csv")
 df_cl_ude = pd.read_csv("datasets/model_output/clustering_output_udemy.csv")
 
+# método para filtrar cursos no deseados (por idioma o por estar ya guardados)
 def filter_courses(cursos_candidatos, contexto, proveedor):
     resultado = []
     for candidato_id, score in cursos_candidatos:
@@ -43,7 +44,7 @@ def filter_courses(cursos_candidatos, contexto, proveedor):
             resultado.append((candidato_id, score))
     return resultado
 
-
+# método para computar la distancia entre dos vectores en el espacio
 def compute_distance_udacity(usuario_embedding, curso_id):
     curso = df_cl_ud.iloc[curso_id]
     rating = curso['rating']
@@ -54,6 +55,7 @@ def compute_distance_udacity(usuario_embedding, curso_id):
     return cos_sim
 
 
+# método para computar la distancia entre dos vectores en el espacio
 def compute_distance_coursera(usuario_embedding, curso_id):
     curso = df_cl_cou.iloc[curso_id]
     rating = curso['rating']
@@ -64,6 +66,7 @@ def compute_distance_coursera(usuario_embedding, curso_id):
     return cos_sim
 
 
+# método para computar la distancia entre dos vectores en el espacio
 def compute_distance_udemy(usuario_embedding, curso_id):
     curso = df_cl_ude.iloc[curso_id]
     curso_embedding = [curso['cost'], curso['n_students'], curso['rating'], curso['hours']]
@@ -71,6 +74,7 @@ def compute_distance_udemy(usuario_embedding, curso_id):
     return cos_sim
 
 
+# método para computar la distancia entre dos word embeddings
 def content_similarity_udacity(perfil_description, curso_description):
     if pd.isna(curso_description):
         curso_description = ""
@@ -82,6 +86,7 @@ def content_similarity_udacity(perfil_description, curso_description):
     return cos_score
 
 
+# método para computar la distancia entre dos word embeddings
 def content_similarity_coursera(perfil_description, curso_description):
     if pd.isna(curso_description):
         curso_description = ""
@@ -93,6 +98,7 @@ def content_similarity_coursera(perfil_description, curso_description):
     return cos_score
 
 
+# método para computar la distancia entre dos word embeddings
 def content_similarity_udemy(perfil_description, curso_description):
     if pd.isna(curso_description):
         curso_description = ""

@@ -30,7 +30,7 @@ def explore_courses_udacity(perfil, contexto, k):
     feature_usuario = convertir_datos_en_features_udacity(perfil)
     # buscar su cluster
     cluster_id = predecir_cluster_udacity(feature_usuario)
-    # crear lista
+    # crear lista de recomendaciones
     list_id_courses = df_cl_ud[df_cl_ud['Label'] == cluster_id].index.tolist()
     cursos_candidatos = []
     for id_course in list_id_courses:
@@ -59,7 +59,7 @@ def explore_courses_coursera(perfil, contexto, k):
     feature_usuario = convertir_datos_en_features_coursera(perfil)
     # buscar su cluster
     cluster_id = predecir_cluster_coursera(feature_usuario)
-    # crear lista
+    # crear lista de recomendaciones
     list_id_courses = df_cl_cou[df_cl_cou['Label'] == cluster_id].index.tolist()
     cursos_candidatos = []
     for id_course in list_id_courses:
@@ -88,7 +88,7 @@ def explore_courses_udemy(perfil, contexto, k):
     feature_usuario = convertir_datos_en_features_udemy(perfil)
     # buscar su cluster
     cluster_id = predecir_cluster_udemy(feature_usuario)
-    # crear lista
+    # crear lista de recomendaciones
     list_id_courses = df_cl_ude[df_cl_ude['Label'] == cluster_id].index.tolist()
     cursos_candidatos = []
     for id_course in list_id_courses:

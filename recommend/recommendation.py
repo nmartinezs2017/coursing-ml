@@ -32,6 +32,7 @@ corpus_embeddings_udemy = pd.read_pickle("datasets/model_output/corpus_embedding
 
 
 def choose_recommendations_udacity(candidatos_ids, vector_usuario, contexto, description, k):
+    # ranking y selección de recomendaciones
     resultados = dict()
     indice = 0
 
@@ -56,6 +57,7 @@ def choose_recommendations_udacity(candidatos_ids, vector_usuario, contexto, des
 
 
 def choose_recommendations_coursera(candidatos_ids, vector_usuario, contexto, description, k):
+    # ranking y selección de recomendaciones
     resultados = dict()
     indice = 0
 
@@ -80,6 +82,7 @@ def choose_recommendations_coursera(candidatos_ids, vector_usuario, contexto, de
 
 
 def choose_recommendations_udemy(candidatos_ids, vector_usuario, contexto, description, k):
+    # ranking y selección de recomendaciones
     resultados = dict()
     indice = 0
 
@@ -112,7 +115,7 @@ def create_list_recommendations_udacity(perfil, contexto, k, query = ""):
     for hit in search_hits:
         list_ids.append(hit['corpus_id'])
 
-    # predecir el cluster del user a partir de sus características
+    # computar vector de features
     user_embedding = convertir_datos_en_features_udacity(perfil)
   #  df_user = pd.DataFrame([user_embedding], columns=["difficulty", "duration", "n_reviews", "rating", "free"])
     list_recommendations = choose_recommendations_udacity(list_ids, user_embedding, contexto, perfil.description, k)
@@ -127,7 +130,7 @@ def create_list_recommendations_coursera(perfil, contexto, k, query = ""):
     for hit in search_hits:
         list_ids.append(hit['corpus_id'])
 
-    # predecir el cluster del user a partir de sus características
+    # computar vector de features
     user_embedding = convertir_datos_en_features_coursera(perfil)
     list_recommendations = choose_recommendations_coursera(list_ids, user_embedding, contexto, perfil.description, k)
     return list_recommendations
@@ -142,7 +145,7 @@ def create_list_recommendations_udemy(perfil, contexto, k, query = ""):
     for hit in search_hits:
         list_ids.append(hit['corpus_id'])
 
-    # predecir el cluster del user a partir de sus características
+    # computar vector de features
     user_embedding = convertir_datos_en_features_udemy(perfil)
     list_recommendations = choose_recommendations_udemy(list_ids, user_embedding, contexto, perfil.description, k)
     return list_recommendations
